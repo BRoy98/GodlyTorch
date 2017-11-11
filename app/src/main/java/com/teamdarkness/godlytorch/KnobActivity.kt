@@ -5,10 +5,13 @@ import android.content.Context
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.view.LayoutInflaterCompat
+import android.support.v7.app.AlertDialog
+import android.util.Log
+import android.widget.Toast
 import com.chrisplus.rootmanager.RootManager
 import com.chrisplus.rootmanager.container.Result
-import com.mikepenz.iconics.context.IconicsLayoutInflater2
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig
@@ -17,6 +20,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 class KnobActivity : AppCompatActivity() {
 
+    private var doubleBackToExitPressedOnce = false
     private var whiteOn = false
     private var yellowOn = false
 
@@ -24,7 +28,6 @@ class KnobActivity : AppCompatActivity() {
     private var whiteValue = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        LayoutInflaterCompat.setFactory2(layoutInflater, IconicsLayoutInflater2(delegate))
         super.onCreate(savedInstanceState)
 
         CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
@@ -39,16 +42,23 @@ class KnobActivity : AppCompatActivity() {
         val whiteCroller: Croller = findViewById(R.id.whiteCroller)
         val yellowCroller: Croller = findViewById(R.id.yellowCroller)
 
-        controlLed(0, 0, true)
+        bothCroller.isEnabled = true
+        whiteCroller.isEnabled = true
+        yellowCroller.isEnabled = true
+
 
         bothCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
-                if (progress == 0) {
+                if (progress == 1) {
+                    whiteCroller.isEnabled = true
+                    yellowCroller.isEnabled = true
                     whiteValue = 0
                     yellowValue = 0
                     whiteOn = false
                     yellowOn = false
                 } else {
+                    whiteCroller.isEnabled = false
+                    yellowCroller.isEnabled = false
                     yellowOn = true
                     whiteOn = true
                     whiteValue = (255 / 20) * (progress - 1)
@@ -73,10 +83,13 @@ class KnobActivity : AppCompatActivity() {
 
         whiteCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
-                if (progress == 0) {
+                if (progress == 1) {
+                    if (yellowCroller.progress == 1)
+                        bothCroller.isEnabled = true
                     whiteValue = 0
                     whiteOn = false
                 } else {
+                    bothCroller.isEnabled = false
                     whiteOn = true
                     whiteValue = (255 / 20) * (progress - 1)
                     if (whiteValue > 225)
@@ -97,10 +110,13 @@ class KnobActivity : AppCompatActivity() {
 
         yellowCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
-                if (progress == 0) {
+                if (progress == 1) {
+                    if (whiteCroller.progress == 1)
+                        bothCroller.isEnabled = true
                     yellowValue = 0
                     yellowOn = false
                 } else {
+                    bothCroller.isEnabled = false
                     yellowOn = true
                     yellowValue = (255 / 20) * (progress - 1)
                     if (yellowValue > 225)
@@ -122,6 +138,30 @@ class KnobActivity : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
+    }
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+
+            val alertDialogBuilder = AlertDialog.Builder(this)
+            alertDialogBuilder.setCancelable(false)
+            alertDialogBuilder.setMessage("Please wait...")
+            alertDialogBuilder.show()
+
+            controlLed(0,0,false)
+
+            Handler().postDelayed({
+                finishAffinity()
+            }, 1000)
+
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+
+        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+
     }
 
     private fun controlLed(whiteLed: Int = 0, yellowLed: Int = 0, torchState: Boolean = false) {

@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.teamdarkness.goldytorch"
+        applicationId "com.teamdarkness.godlytorch"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -21,6 +21,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':croller')
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:design:26.1.0'
@@ -30,12 +31,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'com.chrisplus.rootmanager:library:2.0.5@aar'
-    implementation 'com.sdsmdg.harjot:croller:1.0.7'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
-    implementation "com.mikepenz:iconics-core:2.9.5@aar"
-    implementation "com.mikepenz:iconics-views:2.9.5@aar"
-    implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
-    implementation 'com.mikepenz:community-material-typeface:2.0.46.1@aar'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 repositories {

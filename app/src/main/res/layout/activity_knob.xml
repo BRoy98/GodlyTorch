@@ -104,7 +104,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         fontPath="fonts/blowbrush.ttf"
-        android:text="code with love by Team Darkness"
+        android:text="coded with love by Team Darkness"
         android:textAlignment="center"
         android:textColor="#fff"
         android:textSize="16sp"
