@@ -49,7 +49,7 @@ class KnobActivity : AppCompatActivity() {
         bothCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
 
-                if(progress != masterProgress) {
+                if (progress != masterProgress) {
                     Log.i("onProgressChanged", progress.toString())
                     if (progress == 1) {
                         whiteCroller.isEnabled = true
@@ -110,10 +110,10 @@ class KnobActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(croller: Croller?) {
-                if (yellowOn)
-                    controlLed(whiteValue, yellowValue, true)
-                else
-                    controlLed(whiteValue, yellowValue, false)
+                when {
+                    whiteOn || yellowOn -> controlLed(whiteValue, yellowValue, true)
+                    else -> controlLed(whiteValue, yellowValue, false)
+                }
             }
         });
 
@@ -140,10 +140,10 @@ class KnobActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(croller: Croller?) {
-                if (whiteOn)
-                    controlLed(whiteValue, yellowValue, true)
-                else
-                    controlLed(whiteValue, yellowValue, false)
+                when {
+                    yellowOn || whiteOn -> controlLed(whiteValue, yellowValue, true)
+                    else -> controlLed(whiteValue, yellowValue, false)
+                }
             }
         });
     }
