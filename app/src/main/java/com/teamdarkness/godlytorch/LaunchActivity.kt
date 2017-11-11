@@ -31,7 +31,7 @@ class LaunchActivity : AppCompatActivity() {
                     logText!!.text = "Root access granted!"
 
                     Handler().postDelayed({
-                        val intent = Intent(this@LaunchActivity, MainActivity::class.java)
+                        val intent = Intent(this@LaunchActivity, KnobActivity::class.java)
                         startActivity(intent)
                         finish()
                     }, 1000)
