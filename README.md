@@ -1,6 +1,4 @@
-Godly Torch
-=================
---------------------------
+# Godly Torch  [![Build Status](https://www.bitrise.io/app/763ee94ca31e7d95/status.svg?token=jBe0br2dBnJd6cJkNKJYqg&branch=master)](https://github.com/BRoy98/GodlyTorch)
 
 NEEDS ROOT !
 
