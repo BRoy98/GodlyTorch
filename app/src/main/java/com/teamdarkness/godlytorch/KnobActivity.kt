@@ -54,6 +54,9 @@ class KnobActivity : AppCompatActivity() {
                     whiteValue = (255 / 20) * (progress - 1)
                     if (whiteValue > 225)
                         whiteValue = 225
+                    yellowValue = (255 / 20) * (progress - 1)
+                    if (yellowValue > 225)
+                        yellowValue = 225
                 }
             }
 
