@@ -26,6 +26,9 @@ class KnobActivity : AppCompatActivity() {
 
     private var yellowValue = 0
     private var whiteValue = 0
+    private var yellowProgress = 0
+    private var whiteProgress = 0
+    private var masterProgress = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,31 +45,33 @@ class KnobActivity : AppCompatActivity() {
         val whiteCroller: Croller = findViewById(R.id.whiteCroller)
         val yellowCroller: Croller = findViewById(R.id.yellowCroller)
 
-        bothCroller.isEnabled = true
-        whiteCroller.isEnabled = true
-        yellowCroller.isEnabled = true
-
 
         bothCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
-                if (progress == 1) {
-                    whiteCroller.isEnabled = true
-                    yellowCroller.isEnabled = true
-                    whiteValue = 0
-                    yellowValue = 0
-                    whiteOn = false
-                    yellowOn = false
-                } else {
-                    whiteCroller.isEnabled = false
-                    yellowCroller.isEnabled = false
-                    yellowOn = true
-                    whiteOn = true
-                    whiteValue = (255 / 20) * (progress - 1)
-                    if (whiteValue > 225)
-                        whiteValue = 225
-                    yellowValue = (255 / 20) * (progress - 1)
-                    if (yellowValue > 225)
-                        yellowValue = 225
+
+                if(progress != masterProgress) {
+                    Log.i("onProgressChanged", progress.toString())
+                    if (progress == 1) {
+                        whiteCroller.isEnabled = true
+                        yellowCroller.isEnabled = true
+                        whiteValue = 0
+                        yellowValue = 0
+                        whiteOn = false
+                        yellowOn = false
+                    } else {
+                        whiteCroller.isEnabled = false
+                        yellowCroller.isEnabled = false
+                        yellowOn = true
+                        whiteOn = true
+                        whiteValue = (255 / 20) * (progress - 1)
+                        if (whiteValue > 225)
+                            whiteValue = 225
+                        yellowValue = (255 / 20) * (progress - 1)
+                        if (yellowValue > 225)
+                            yellowValue = 225
+                        Log.i("onProgressChanged", "${whiteValue.toString()} | ${yellowValue.toString()}")
+                    }
+                    masterProgress = progress
                 }
             }
 
@@ -74,6 +79,7 @@ class KnobActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(croller: Croller?) {
+                Log.i("onStopTrackingTouch", "${whiteValue.toString()} | ${yellowValue.toString()}")
                 if (yellowOn)
                     controlLed(whiteValue, yellowValue, true)
                 else
@@ -83,17 +89,20 @@ class KnobActivity : AppCompatActivity() {
 
         whiteCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
-                if (progress == 1) {
-                    if (yellowCroller.progress == 1)
-                        bothCroller.isEnabled = true
-                    whiteValue = 0
-                    whiteOn = false
-                } else {
-                    bothCroller.isEnabled = false
-                    whiteOn = true
-                    whiteValue = (255 / 20) * (progress - 1)
-                    if (whiteValue > 225)
-                        whiteValue = 225
+                if (progress != whiteProgress) {
+                    if (progress == 1) {
+                        if (yellowCroller.progress == 1)
+                            bothCroller.isEnabled = true
+                        whiteValue = 0
+                        whiteOn = false
+                    } else {
+                        bothCroller.isEnabled = false
+                        whiteOn = true
+                        whiteValue = (255 / 20) * (progress - 1)
+                        if (whiteValue > 225)
+                            whiteValue = 225
+                    }
+                    whiteProgress = progress
                 }
             }
 
@@ -110,17 +119,20 @@ class KnobActivity : AppCompatActivity() {
 
         yellowCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
-                if (progress == 1) {
-                    if (whiteCroller.progress == 1)
-                        bothCroller.isEnabled = true
-                    yellowValue = 0
-                    yellowOn = false
-                } else {
-                    bothCroller.isEnabled = false
-                    yellowOn = true
-                    yellowValue = (255 / 20) * (progress - 1)
-                    if (yellowValue > 225)
-                        yellowValue = 225
+                if (progress != yellowProgress) {
+                    if (progress == 1) {
+                        if (whiteCroller.progress == 1)
+                            bothCroller.isEnabled = true
+                        yellowValue = 0
+                        yellowOn = false
+                    } else {
+                        bothCroller.isEnabled = false
+                        yellowOn = true
+                        yellowValue = (255 / 20) * (progress - 1)
+                        if (yellowValue > 225)
+                            yellowValue = 225
+                    }
+                    yellowProgress = progress
                 }
             }
 
@@ -148,7 +160,7 @@ class KnobActivity : AppCompatActivity() {
             alertDialogBuilder.setMessage("Please wait...")
             alertDialogBuilder.show()
 
-            controlLed(0,0,false)
+            controlLed(0, 0, false)
 
             Handler().postDelayed({
                 finishAffinity()
