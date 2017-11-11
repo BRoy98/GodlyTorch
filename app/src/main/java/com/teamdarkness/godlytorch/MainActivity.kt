@@ -17,10 +17,6 @@ import com.chrisplus.rootmanager.container.Result
 
 class MainActivity : AppCompatActivity() {
 
-    private var whiteSeekBar: SeekBar? = null
-    private var yellowSeekBar: SeekBar? = null
-    private var buttonOffAll: Button? = null
-    private var buttonOnAll: Button? = null
     private var doubleBackToExitPressedOnce = false
     private var whiteOn = false
     private var yellowOn = false
@@ -33,10 +29,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        whiteSeekBar = findViewById(R.id.whiteSeekBar)
-        yellowSeekBar = findViewById(R.id.yellowSeekBar)
-        buttonOffAll = findViewById(R.id.buttonOffAll)
-        buttonOnAll = findViewById(R.id.buttonOnAll)
+        val whiteSeekBar: SeekBar = findViewById(R.id.whiteSeekBar)
+        val yellowSeekBar: SeekBar = findViewById(R.id.yellowSeekBar)
+        val buttonOffAll: Button = findViewById(R.id.buttonOffAll)
+        val buttonOnAll: Button = findViewById(R.id.buttonOnAll)
 
         command = "echo 0 > /sys/class/leds/led\\:torch_0/brightness;" +
                 "echo 0 > /sys/class/leds/led\\:torch_1/brightness;" +
