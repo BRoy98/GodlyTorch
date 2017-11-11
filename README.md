@@ -18,4 +18,9 @@ Credits
 * [**Rohan Khurana**](https://github.com/rk2810/)
 
 --------
-Thanks to * [*Susan**](https://github.com/uvera/) for a poorly written bash script as a motivation to make it into app
+Thanks to a [**Dušan Uverić**](https://github.com/uvera/) for a poorly written bash script as a motivation to make it into app.
+
+DONATION  ?
+-----------
+
+Will have to think of that....   */thinking emoji/*
