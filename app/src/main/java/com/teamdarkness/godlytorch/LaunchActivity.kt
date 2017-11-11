@@ -23,12 +23,12 @@ class LaunchActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
 
         if (RootManager.getInstance().hasRooted()) {
-            logText!!.text = "Obtaining root access..."
+            logText!!.text = "Looking for root..."
             progressBar!!.visibility = View.VISIBLE
 
             Handler().postDelayed({
                 if (RootManager.getInstance().obtainPermission()) {
-                    logText!!.text = "Root access granted!"
+                    logText!!.text = "I am ROOT!"
 
                     Handler().postDelayed({
                         val intent = Intent(this@LaunchActivity, KnobActivity::class.java)
@@ -37,13 +37,13 @@ class LaunchActivity : AppCompatActivity() {
                     }, 1000)
 
                 } else {
-                    logText!!.text = "Root access Denied. Please grant root access to continue."
+                    logText!!.text = "I ain't root, gimme ROOT !"
                     progressBar!!.visibility = View.INVISIBLE
                 }
             }, 1200)
 
         } else {
-            logText!!.text = "Device is not rooted!"
+            logText!!.text = "Please uninstall me, I don't belong here...."
             progressBar!!.visibility = View.INVISIBLE
         }
     }
