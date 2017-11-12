@@ -23,27 +23,27 @@ class LaunchActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
 
         if (RootManager.getInstance().hasRooted()) {
-            logText!!.text = "Looking for root..."
+            logText!!.text = getString(R.string.root_check)
             progressBar!!.visibility = View.VISIBLE
 
             Handler().postDelayed({
                 if (RootManager.getInstance().obtainPermission()) {
-                    logText!!.text = "I am ROOT!"
+                    logText!!.text = getString(R.string.root_success)
 
                     Handler().postDelayed({
-                        val intent = Intent(this@LaunchActivity, KnobActivity::class.java)
+                        val intent = Intent(this@LaunchActivity, ThreeKnobActivity::class.java)
                         startActivity(intent)
                         finish()
                     }, 1000)
 
                 } else {
-                    logText!!.text = "I ain't root, gimme ROOT !"
+                    logText!!.text = getString(R.string.root_denied)
                     progressBar!!.visibility = View.INVISIBLE
                 }
             }, 1200)
 
         } else {
-            logText!!.text = "Please uninstall me, I don't belong here...."
+            logText!!.text = getString(R.string.not_rooted)
             progressBar!!.visibility = View.INVISIBLE
         }
     }
