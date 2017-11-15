@@ -1,10 +1,59 @@
+<!--
+  ~ This file is part of Godly Torch.
+  ~
+  ~     Godly Torch is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Godly Torch is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
 <resources>
     <string name="app_name">Godly Torch</string>
 
     <string name="cmd_sleep">sleep 0.01;</string>
-    <string name="cmd_echo">echo %1$d > /sys/class/leds/%2$d;</string>
-    <string name="root_check">Looking for root...</string>
+    <string name="cmd_echo">echo %1$s > /sys/class/leds/%2$s;</string>
+
+    <string name="root_check">Looking for root…</string>
     <string name="root_success">I am ROOT!</string>
     <string name="root_denied">I ain\'t root, gimme ROOT !</string>
-    <string name="not_rooted">Please uninstall me, I don\'t belong here...</string>
+    <string name="not_rooted">Please uninstall me, I don\'t belong here…</string>
+    <string name="check_device">Checking device compatibility…</string>
+    <string name="device_incompatible">Device Incompatible</string>
+    <string name="incompatible_message"><![CDATA[<b>%1$s is not officially supported by us.</b> <br><br>You can always contact us for your device support. We are more than happy to help you! You must provide us proper details about your device to get official support. <br><br>You can try the app on your device <b>on your own risk</b>.]]></string>
+    <string name="contact_us">Contact Us</string>
+
+    <string-array name="supported_devices">
+        <item>gemini</item>
+        <item>mido</item>
+        <item>natrium</item>
+        <item>capricon</item>
+        <item>potter</item>
+        <item>cedric</item>
+    </string-array>
+
+    <string-array name="device_white_led">
+        <item>led:torch_0/brightness</item>
+        <item>led:torch_1/brightness</item>
+        <item>led:torch_0/brightness</item>
+        <item>led:torch_0/brightness</item>
+        <item>led:torch_1/brightness</item>
+        <item>led:torch_0/brightness</item>
+    </string-array>
+
+    <string-array name="device_yellow_led">
+        <item>led:torch_1/brightness</item>
+        <item>led:torch_0/brightness</item>
+        <item>led:torch_1/brightness</item>
+        <item>led:torch_1/brightness</item>
+        <item>led:torch_0/brightness</item>
+        <item>led:torch_1/brightness</item>
+    </string-array>
 </resources>

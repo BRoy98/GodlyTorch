@@ -1,24 +1,39 @@
+/*
+ * This file is part of Godly Torch.
+ *
+ *     Godly Torch is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, either version 3 of the License, or
+ *     (at your option) any later version.
+ *
+ *     Godly Torch is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
+ *
+ *     You should have received a copy of the GNU General Public License
+ *     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.teamdarkness.godlytorch
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.view.LayoutInflaterCompat
-import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.widget.Toast
 import com.chrisplus.rootmanager.RootManager
 import com.chrisplus.rootmanager.container.Result
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
-class KnobActivity : AppCompatActivity() {
+class ThreeKnobActivity : AppCompatActivity() {
 
     private var doubleBackToExitPressedOnce = false
     private var whiteOn = false
@@ -26,25 +41,38 @@ class KnobActivity : AppCompatActivity() {
 
     private var yellowValue = 0
     private var whiteValue = 0
+    private var yellowLocation = "led:torch_0/brightness"
+    private var whiteLocation = "led:torch_1/brightness"
     private var yellowProgress = 0
     private var whiteProgress = 0
     private var masterProgress = 0
+    private var isUnsupported = true
+    var deviceId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/blowbrush.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        )
-
-        setContentView(R.layout.activity_knob)
+        setContentView(R.layout.activity_three_knob)
 
         val bothCroller: Croller = findViewById(R.id.bothCroller)
         val whiteCroller: Croller = findViewById(R.id.whiteCroller)
         val yellowCroller: Croller = findViewById(R.id.yellowCroller)
 
+        val deviceId = this.intent?.getStringExtra("device_id")
+        val supportedDevices = resources.getStringArray(R.array.supported_devices)
+        val whiteLedList = resources.getStringArray(R.array.device_white_led)
+        val yellowLedList = resources.getStringArray(R.array.device_yellow_led)
+
+        if (deviceId != null) {
+            if (deviceId.isNotEmpty()) {
+                for ((i, device) in supportedDevices.withIndex()) {
+                    if (device == deviceId) {
+                        isUnsupported = false
+                        whiteLocation = whiteLedList[i]
+                        yellowLocation = yellowLedList[i]
+                    }
+                }
+            }
+        }
 
         bothCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
@@ -155,14 +183,22 @@ class KnobActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (doubleBackToExitPressedOnce) {
 
-            val alertDialogBuilder = AlertDialog.Builder(this)
-            alertDialogBuilder.setCancelable(false)
-            alertDialogBuilder.setMessage("Please wait...")
-            alertDialogBuilder.show()
+            val alertDialogBuilder = ProgressDialog.show(this, "Quit", "Please wait...")
+
+            if (isUnsupported) {
+                alertDialogBuilder.cancel()
+                finishAffinity()
+                return
+            } else {
+                alertDialogBuilder.setCancelable(false)
+                alertDialogBuilder.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                alertDialogBuilder.show()
+            }
 
             controlLed(0, 0, false)
 
             Handler().postDelayed({
+                alertDialogBuilder.dismiss()
                 finishAffinity()
             }, 1000)
 
@@ -180,21 +216,20 @@ class KnobActivity : AppCompatActivity() {
 
         runAsyncTask(@SuppressLint("StaticFieldLeak")
         object : AsyncTask<Void, Void, Result>() {
-            override fun doInBackground(vararg p0: Void?): Result {
-                var torch: Int = 0
+            override fun doInBackground(vararg p0: Void?): Result? {
+                var torch = 0
                 if (torchState)
                     torch = 255
 
-                val command: String = "echo 0 > /sys/class/leds/led\\:switch/brightness;" +
-                        "sleep 0.01;" +
-                        "echo $whiteLed > /sys/class/leds/led\\:torch_0/brightness;" +
-                        "echo $yellowLed > /sys/class/leds/led\\:torch_1/brightness;" +
-                        "echo $torch > /sys/class/leds/led\\:switch/brightness;"
+                val command: String = String.format(getString(R.string.cmd_echo), "0", "led:switch/brightness") +
+                        getString(R.string.cmd_sleep) +
+                        String.format(getString(R.string.cmd_echo), whiteLed, whiteLocation) +
+                        String.format(getString(R.string.cmd_echo), yellowLed, yellowLocation) +
+                        String.format(getString(R.string.cmd_echo), torch, "led:switch/brightness")
                 return RootManager.getInstance().runCommand(command)
             }
 
             override fun onPostExecute(result: Result?) {
-
                 super.onPostExecute(result)
             }
 
