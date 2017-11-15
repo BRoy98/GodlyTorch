@@ -57,7 +57,7 @@
 
 
     <com.sdsmdg.harjot.crollerTest.Croller
-        android:id="@+id/whiteCroller"
+        android:id="@+id/yellowCroller"
         android:layout_width="220dp"
         android:layout_height="0dp"
         android:layout_centerInParent="true"
@@ -87,7 +87,7 @@
         app:layout_constraintGuide_percent="0.62" />
 
     <com.sdsmdg.harjot.crollerTest.Croller
-        android:id="@+id/yellowCroller"
+        android:id="@+id/whiteCroller"
         android:layout_width="220dp"
         android:layout_height="0dp"
         android:layout_centerInParent="true"

@@ -40,7 +40,7 @@
         <item>kuntao</item>
     </string-array>
 
-    <string-array name="device_white_led">
+    <string-array name="device_yellow_led">
         <item>led:torch_0/brightness</item>
         <item>led:torch_1/brightness</item>
         <item>led:torch_0/brightness</item>
@@ -50,7 +50,7 @@
         <item>led:torch_1/brightness</item>
     </string-array>
 
-    <string-array name="device_yellow_led">
+    <string-array name="device_white_led">
         <item>led:torch_1/brightness</item>
         <item>led:torch_0/brightness</item>
         <item>led:torch_1/brightness</item>
