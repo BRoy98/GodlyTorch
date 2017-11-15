@@ -36,16 +36,22 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 class ThreeKnobActivity : AppCompatActivity() {
 
     private var doubleBackToExitPressedOnce = false
+    private var whiteSingleTap = false
+    private var yellowSingleTap = false
+    private var masterSingleTap = false
+
     private var whiteOn = false
     private var yellowOn = false
 
     private var yellowValue = 0
     private var whiteValue = 0
+    private var yellowValueOld = 0
+    private var whiteValueOld = 0
     private var yellowLocation = "led:torch_0/brightness"
     private var whiteLocation = "led:torch_1/brightness"
-    private var yellowProgress = 0
-    private var whiteProgress = 0
-    private var masterProgress = 0
+    private var yellowProgress = 1
+    private var whiteProgress = 1
+    private var masterProgress = 1
     private var isUnsupported = true
     var deviceId = ""
 
@@ -53,7 +59,7 @@ class ThreeKnobActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_three_knob)
 
-        val bothCroller: Croller = findViewById(R.id.bothCroller)
+        val masterCroller: Croller = findViewById(R.id.bothCroller)
         val whiteCroller: Croller = findViewById(R.id.whiteCroller)
         val yellowCroller: Croller = findViewById(R.id.yellowCroller)
 
@@ -74,7 +80,8 @@ class ThreeKnobActivity : AppCompatActivity() {
             }
         }
 
-        bothCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
+        masterCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
+
             override fun onProgressChanged(croller: Croller?, progress: Int) {
 
                 if (progress != masterProgress) {
@@ -103,15 +110,29 @@ class ThreeKnobActivity : AppCompatActivity() {
                 }
             }
 
+            override fun onTap(croller: Croller?) {
+                if (masterSingleTap) {
+                    if (masterProgress > 1)
+                        masterCroller.progress = 1
+                    else
+                        masterCroller.progress = 20
+                }
+                masterSingleTap = true
+                Handler().postDelayed({ masterSingleTap = false }, 300)
+            }
+
             override fun onStartTrackingTouch(croller: Croller?) {
             }
 
             override fun onStopTrackingTouch(croller: Croller?) {
-                Log.i("onStopTrackingTouch", "${whiteValue.toString()} | ${yellowValue.toString()}")
-                if (yellowOn)
-                    controlLed(whiteValue, yellowValue, true)
-                else
-                    controlLed(whiteValue, yellowValue, false)
+                if (whiteValue != whiteValueOld || yellowValue != yellowValueOld) {
+                    if (yellowOn)
+                        controlLed(whiteValue, yellowValue, true)
+                    else
+                        controlLed(whiteValue, yellowValue, false)
+                    whiteValueOld = whiteValue
+                    yellowValueOld = yellowValue
+                }
             }
         });
 
@@ -120,11 +141,11 @@ class ThreeKnobActivity : AppCompatActivity() {
                 if (progress != whiteProgress) {
                     if (progress == 1) {
                         if (yellowCroller.progress == 1)
-                            bothCroller.isEnabled = true
+                            masterCroller.isEnabled = true
                         whiteValue = 0
                         whiteOn = false
                     } else {
-                        bothCroller.isEnabled = false
+                        masterCroller.isEnabled = false
                         whiteOn = true
                         whiteValue = (255 / 20) * (progress - 1)
                         if (whiteValue > 225)
@@ -134,13 +155,27 @@ class ThreeKnobActivity : AppCompatActivity() {
                 }
             }
 
+            override fun onTap(croller: Croller?) {
+                if (whiteSingleTap) {
+                    if (whiteOn)
+                        whiteCroller.progress = 1
+                    else
+                        whiteCroller.progress = 20
+                }
+                whiteSingleTap = true
+                Handler().postDelayed({ whiteSingleTap = false }, 300)
+            }
+
             override fun onStartTrackingTouch(croller: Croller?) {
             }
 
             override fun onStopTrackingTouch(croller: Croller?) {
-                when {
-                    whiteOn || yellowOn -> controlLed(whiteValue, yellowValue, true)
-                    else -> controlLed(whiteValue, yellowValue, false)
+                if (whiteValue != whiteValueOld) {
+                    when {
+                        whiteOn || yellowOn -> controlLed(whiteValue, yellowValue, true)
+                        else -> controlLed(whiteValue, yellowValue, false)
+                    }
+                    whiteValueOld = whiteValue
                 }
             }
         });
@@ -150,11 +185,11 @@ class ThreeKnobActivity : AppCompatActivity() {
                 if (progress != yellowProgress) {
                     if (progress == 1) {
                         if (whiteCroller.progress == 1)
-                            bothCroller.isEnabled = true
+                            masterCroller.isEnabled = true
                         yellowValue = 0
                         yellowOn = false
                     } else {
-                        bothCroller.isEnabled = false
+                        masterCroller.isEnabled = false
                         yellowOn = true
                         yellowValue = (255 / 20) * (progress - 1)
                         if (yellowValue > 225)
@@ -164,13 +199,27 @@ class ThreeKnobActivity : AppCompatActivity() {
                 }
             }
 
+            override fun onTap(croller: Croller?) {
+                if (yellowSingleTap) {
+                    if (yellowOn)
+                        yellowCroller.progress = 1
+                    else
+                        yellowCroller.progress = 20
+                }
+                yellowSingleTap = true
+                Handler().postDelayed({ yellowSingleTap = false }, 300)
+            }
+
             override fun onStartTrackingTouch(croller: Croller?) {
             }
 
             override fun onStopTrackingTouch(croller: Croller?) {
-                when {
-                    yellowOn || whiteOn -> controlLed(whiteValue, yellowValue, true)
-                    else -> controlLed(whiteValue, yellowValue, false)
+                if (yellowValue != yellowValueOld) {
+                    when {
+                        yellowOn || whiteOn -> controlLed(whiteValue, yellowValue, true)
+                        else -> controlLed(whiteValue, yellowValue, false)
+                    }
+                    yellowValueOld = yellowValue
                 }
             }
         });
