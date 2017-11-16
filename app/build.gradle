@@ -22,7 +22,7 @@ android {
         debug {
             storeFile file("../debug-key")
             storePassword 'godlytorch'
-            keyAlias 'godlytorch'
+            keyAlias 'godly'
             keyPassword 'godlytorch'
         }
     }
