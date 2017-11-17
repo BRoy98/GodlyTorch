@@ -87,6 +87,15 @@ object DeviceList {
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
+                Device().setName("LeEco Le 2")
+                        .setDeviceId("le_s2")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
                 Device().setName("Redmi Note 3")
                         .setDeviceId("kenzo")
                         .isDualTone(false)
