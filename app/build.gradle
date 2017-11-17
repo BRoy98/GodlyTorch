@@ -41,7 +41,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation 'com.chrisplus.rootmanager:library:2.0.5@aar'
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
+    implementation 'eu.chainfire:libsuperuser:1.0.0.+'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }

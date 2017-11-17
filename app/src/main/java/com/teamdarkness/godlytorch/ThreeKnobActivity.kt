@@ -20,16 +20,16 @@ package com.teamdarkness.godlytorch
 import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
-import com.chrisplus.rootmanager.RootManager
-import com.chrisplus.rootmanager.container.Result
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
+import com.teamdarkness.godlytorch.Utils.Utils.runCommand
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
@@ -262,30 +262,15 @@ class ThreeKnobActivity : AppCompatActivity() {
     }
 
     private fun controlLed(whiteLed: Int = 0, yellowLed: Int = 0, torchState: Boolean = false) {
+        var torch = 0
+        if (torchState)
+            torch = 255
 
-        runAsyncTask(@SuppressLint("StaticFieldLeak")
-        object : AsyncTask<Void, Void, Result>() {
-            override fun doInBackground(vararg p0: Void?): Result? {
-                var torch = 0
-                if (torchState)
-                    torch = 255
-
-                val command: String = String.format(getString(R.string.cmd_echo), "0", "led:switch/brightness") +
-                        getString(R.string.cmd_sleep) +
-                        String.format(getString(R.string.cmd_echo), whiteLed, whiteLocation) +
-                        String.format(getString(R.string.cmd_echo), yellowLed, yellowLocation) +
-                        String.format(getString(R.string.cmd_echo), torch, "led:switch/brightness")
-                return RootManager.getInstance().runCommand(command)
-            }
-
-            override fun onPostExecute(result: Result?) {
-                super.onPostExecute(result)
-            }
-
-        })
-    }
-
-    private fun <T> runAsyncTask(asyncTask: AsyncTask<T, *, *>, vararg params: T) {
-        asyncTask.execute(*params)
+        val command: String = String.format(getString(R.string.cmd_echo), "0", "led:switch/brightness") +
+                getString(R.string.cmd_sleep) +
+                String.format(getString(R.string.cmd_echo), whiteLed, whiteLocation) +
+                String.format(getString(R.string.cmd_echo), yellowLed, yellowLocation) +
+                String.format(getString(R.string.cmd_echo), torch, "led:switch/brightness")
+        return runCommand(command)
     }
 }

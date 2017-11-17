@@ -26,13 +26,10 @@ import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.afollestad.materialdialogs.DialogAction
 
-import com.chrisplus.rootmanager.RootManager
 import com.teamdarkness.godlytorch.Utils.Common
-import com.afollestad.materialdialogs.MaterialDialog
 import android.support.constraint.ConstraintLayout
-import kotlinx.android.synthetic.main.activity_launch.*
+import com.teamdarkness.godlytorch.Utils.Utils
 
 
 class LaunchActivity : AppCompatActivity() {
@@ -49,58 +46,52 @@ class LaunchActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBar)
         root = findViewById(R.id.root)
 
-        Log.i("Launch", android.os.Build.MODEL)
-        Log.i("Launch", android.os.Build.PRODUCT)
+        logText.text = getString(R.string.root_check)
+        progressBar.visibility = View.VISIBLE
 
-        if (RootManager.getInstance().hasRooted()) {
-            logText.text = getString(R.string.root_check)
-            progressBar.visibility = View.VISIBLE
+        Handler().postDelayed({
+            if (Utils.askRoot()) {
+                logText.text = getString(R.string.check_device)
 
-            Handler().postDelayed({
-                if (RootManager.getInstance().obtainPermission()) {
-                    logText.text = getString(R.string.check_device)
-
-                    if (checkSupport()) {
-                        val intent = Intent(this@LaunchActivity, ThreeKnobActivity::class.java)
-                        intent.putExtra("device_id", Common().getDeviceId())
-                        val bundle = ActivityOptions.makeCustomAnimation(baseContext, R.anim.fade_in, R.anim.fade_out).toBundle()
-                        startActivity(intent, bundle)
-                        finish()
-                    } else {
-                        val intent = Intent(this@LaunchActivity, IncompatibleActivity::class.java)
-                        intent.putExtra("device_id", Common().getDeviceId())
-                        val bundle = ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out).toBundle()
-                        startActivity(intent, bundle)
-                        finish()
-                    }
-
+                if (checkSupport()) {
+                    val intent = Intent(this@LaunchActivity, ThreeKnobActivity::class.java)
+                    intent.putExtra("device_id", Common().getDeviceId())
+                    val bundle = ActivityOptions.makeCustomAnimation(baseContext, R.anim.fade_in, R.anim.fade_out).toBundle()
+                    startActivity(intent, bundle)
+                    finish()
                 } else {
-                    logText.text = getString(R.string.root_denied)
-                    progressBar.visibility = View.INVISIBLE
+                    val intent = Intent(this@LaunchActivity, IncompatibleActivity::class.java)
+                    intent.putExtra("device_id", Common().getDeviceId())
+                    val bundle = ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out).toBundle()
+                    startActivity(intent, bundle)
+                    finish()
                 }
-            }, 1200)
 
-        } else {
-            logText.text = getString(R.string.not_rooted)
-            progressBar.visibility = View.INVISIBLE
-        }
+            } else {
+                logText.text = getString(R.string.root_denied)
+                progressBar.visibility = View.INVISIBLE
+            }
+        }, 1000)
     }
 
     private fun checkSupport(): Boolean {
         val supportedDevices = resources.getStringArray(R.array.supported_devices)
         val deviceId = Common().getDeviceId()
         var deviceProduct = android.os.Build.PRODUCT
-        if(deviceProduct.contains("_")) {
+        var deviceProductSplit = ""
+
+
+        if (deviceProduct.contains("_")) {
             val product = deviceProduct.split("_")
-            deviceProduct = product[1]
+            deviceProductSplit = product[1]
         }
 
-        if (supportedDevices.contains(deviceId)) {
-            return true
-        } else if (supportedDevices.contains(deviceProduct)) {
-            return true
+        return when {
+            supportedDevices.contains(deviceId) -> true
+            supportedDevices.contains(deviceProduct) -> true
+            supportedDevices.contains(deviceProductSplit) -> true
+            else -> false
         }
-        return false
     }
 
 }
