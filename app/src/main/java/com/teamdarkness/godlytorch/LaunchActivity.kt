@@ -27,9 +27,9 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 
-import com.teamdarkness.godlytorch.Utils.Common
 import android.support.constraint.ConstraintLayout
-import com.teamdarkness.godlytorch.Utils.Utils
+import com.teamdarkness.godlytorch.Utils.*
+import eu.chainfire.libsuperuser.Shell.SU
 
 
 class LaunchActivity : AppCompatActivity() {
@@ -53,15 +53,25 @@ class LaunchActivity : AppCompatActivity() {
             if (Utils.askRoot()) {
                 logText.text = getString(R.string.check_device)
 
-                if (checkSupport()) {
-                    val intent = Intent(this@LaunchActivity, ThreeKnobActivity::class.java)
-                    intent.putExtra("device_id", Common().getDeviceId())
-                    val bundle = ActivityOptions.makeCustomAnimation(baseContext, R.anim.fade_in, R.anim.fade_out).toBundle()
-                    startActivity(intent, bundle)
-                    finish()
+                val result = checkSupport()
+
+                if (result.isSupported) {
+                    if(result.isDualTone) {
+                        val intent = Intent(this@LaunchActivity, ThreeKnobActivity::class.java)
+                        intent.putExtra("device_id", result.deviceId)
+                        val bundle = ActivityOptions.makeCustomAnimation(baseContext, R.anim.fade_in, R.anim.fade_out).toBundle()
+                        startActivity(intent, bundle)
+                        finish()
+                    } else {
+                        val intent = Intent(this@LaunchActivity, SingleKnobActivity::class.java)
+                        intent.putExtra("device_id", result.deviceId)
+                        val bundle = ActivityOptions.makeCustomAnimation(baseContext, R.anim.fade_in, R.anim.fade_out).toBundle()
+                        startActivity(intent, bundle)
+                        finish()
+                    }
                 } else {
                     val intent = Intent(this@LaunchActivity, IncompatibleActivity::class.java)
-                    intent.putExtra("device_id", Common().getDeviceId())
+                    intent.putExtra("device_id", result.deviceId)
                     val bundle = ActivityOptions.makeCustomAnimation(this, R.anim.fade_in, R.anim.fade_out).toBundle()
                     startActivity(intent, bundle)
                     finish()
@@ -74,24 +84,47 @@ class LaunchActivity : AppCompatActivity() {
         }, 1000)
     }
 
-    private fun checkSupport(): Boolean {
-        val supportedDevices = resources.getStringArray(R.array.supported_devices)
+    private fun checkSupport(): DeviceResult {
+        val deviceList: ArrayList<Device> = DeviceList.getDevices()
         val deviceId = Common().getDeviceId()
-        var deviceProduct = android.os.Build.PRODUCT
+        val deviceProduct = android.os.Build.PRODUCT
         var deviceProductSplit = ""
-
+        var result = DeviceResult()
 
         if (deviceProduct.contains("_")) {
             val product = deviceProduct.split("_")
             deviceProductSplit = product[1]
         }
 
-        return when {
-            supportedDevices.contains(deviceId) -> true
-            supportedDevices.contains(deviceProduct) -> true
-            supportedDevices.contains(deviceProductSplit) -> true
-            else -> false
+        for ((i, device) in deviceList.withIndex()) {
+            when {
+                device.deviceId.contains(deviceId) -> {
+                    result.isSupported = true
+                    result.deviceId = device.deviceId
+                    result.isDualTone = device.isDualTone
+                    return result
+                }
+                device.deviceId.contains(deviceProduct) -> {
+                    result.isSupported = true
+                    result.deviceId = device.deviceId
+                    result.isDualTone = device.isDualTone
+                    return result
+                }
+                deviceProductSplit.isNotEmpty() && device.deviceId.contains(deviceProductSplit) -> {
+                    result.isSupported = true
+                    result.deviceId = device.deviceId
+                    result.isDualTone = device.isDualTone
+                    return result
+                }
+                i == deviceList.size - 1 -> {
+                    return result
+                }
+                else -> {
+                }
+            }
+
         }
+        return result
     }
 
 }

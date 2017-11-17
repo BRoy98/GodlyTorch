@@ -26,9 +26,12 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.Toast
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
+import com.teamdarkness.godlytorch.Utils.Device
+import com.teamdarkness.godlytorch.Utils.DeviceList
 import com.teamdarkness.godlytorch.Utils.Utils.runCommand
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
@@ -47,8 +50,12 @@ class ThreeKnobActivity : AppCompatActivity() {
     private var whiteValue = 0
     private var yellowValueOld = 0
     private var whiteValueOld = 0
-    private var yellowLocation = "led:torch_0/brightness"
-    private var whiteLocation = "led:torch_1/brightness"
+
+    private var whiteLedFileLocation = "led:torch_1/brightness"
+    private var yellowLedFileLocation = "led:torch_0/brightness"
+    private var toggleFileLocation = "led:switch/brightness"
+    private var brightnessMax: Int = 255
+
     private var yellowProgress = 1
     private var whiteProgress = 1
     private var masterProgress = 1
@@ -62,20 +69,25 @@ class ThreeKnobActivity : AppCompatActivity() {
         val masterCroller: Croller = findViewById(R.id.bothCroller)
         val whiteCroller: Croller = findViewById(R.id.whiteCroller)
         val yellowCroller: Croller = findViewById(R.id.yellowCroller)
+        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
 
         val deviceId = this.intent?.getStringExtra("device_id")
-        val supportedDevices = resources.getStringArray(R.array.supported_devices)
-        val whiteLedList = resources.getStringArray(R.array.device_white_led)
-        val yellowLedList = resources.getStringArray(R.array.device_yellow_led)
 
-        if (deviceId != null) {
-            if (deviceId.isNotEmpty()) {
-                for ((i, device) in supportedDevices.withIndex()) {
-                    if (device == deviceId) {
-                        isUnsupported = false
-                        whiteLocation = whiteLedList[i]
-                        yellowLocation = yellowLedList[i]
-                    }
+        val deviceList: ArrayList<Device> = DeviceList.getDevices()
+
+        settingsButton.setOnClickListener {
+            //val intent = Intent(this@ThreeKnobActivity, SettingsActivity::class.java)
+            // startActivity(intent)
+        }
+
+        if (deviceId != null && deviceId.isNotEmpty()) {
+            for (device in deviceList) {
+                if (device.deviceId == deviceId) {
+                    this.isUnsupported = false
+                    this.brightnessMax = device.brightnessMax
+                    this.whiteLedFileLocation = device.whiteLedFileLocation
+                    this.yellowLedFileLocation = device.yellowLedFileLocation
+                    this.toggleFileLocation = device.toggleFileLocation
                 }
             }
         }
@@ -85,7 +97,6 @@ class ThreeKnobActivity : AppCompatActivity() {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
 
                 if (progress != masterProgress) {
-                    Log.i("onProgressChanged", progress.toString())
                     if (progress == 1) {
                         whiteCroller.isEnabled = true
                         yellowCroller.isEnabled = true
@@ -98,13 +109,12 @@ class ThreeKnobActivity : AppCompatActivity() {
                         yellowCroller.isEnabled = false
                         yellowOn = true
                         whiteOn = true
-                        whiteValue = (255 / 20) * (progress - 1)
-                        if (whiteValue > 225)
-                            whiteValue = 225
-                        yellowValue = (255 / 20) * (progress - 1)
-                        if (yellowValue > 225)
-                            yellowValue = 225
-                        Log.i("onProgressChanged", "${whiteValue.toString()} | ${yellowValue.toString()}")
+                        whiteValue = (brightnessMax / 20) * (progress - 1)
+                        if (whiteValue > brightnessMax)
+                            whiteValue = brightnessMax
+                        yellowValue = (brightnessMax / 20) * (progress - 1)
+                        if (yellowValue > brightnessMax)
+                            yellowValue = brightnessMax
                     }
                     masterProgress = progress
                 }
@@ -134,7 +144,7 @@ class ThreeKnobActivity : AppCompatActivity() {
                     yellowValueOld = yellowValue
                 }
             }
-        });
+        })
 
         whiteCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
@@ -178,7 +188,7 @@ class ThreeKnobActivity : AppCompatActivity() {
                     whiteValueOld = whiteValue
                 }
             }
-        });
+        })
 
         yellowCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
             override fun onProgressChanged(croller: Croller?, progress: Int) {
@@ -222,7 +232,7 @@ class ThreeKnobActivity : AppCompatActivity() {
                     yellowValueOld = yellowValue
                 }
             }
-        });
+        })
     }
 
     override fun attachBaseContext(newBase: Context?) {
@@ -264,13 +274,13 @@ class ThreeKnobActivity : AppCompatActivity() {
     private fun controlLed(whiteLed: Int = 0, yellowLed: Int = 0, torchState: Boolean = false) {
         var torch = 0
         if (torchState)
-            torch = 255
+            torch = this.brightnessMax
 
-        val command: String = String.format(getString(R.string.cmd_echo), "0", "led:switch/brightness") +
+        val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
                 getString(R.string.cmd_sleep) +
-                String.format(getString(R.string.cmd_echo), whiteLed, whiteLocation) +
-                String.format(getString(R.string.cmd_echo), yellowLed, yellowLocation) +
-                String.format(getString(R.string.cmd_echo), torch, "led:switch/brightness")
+                String.format(getString(R.string.cmd_echo), whiteLed, whiteLedFileLocation) +
+                String.format(getString(R.string.cmd_echo), yellowLed, yellowLedFileLocation) +
+                String.format(getString(R.string.cmd_echo), torch, toggleFileLocation)
         return runCommand(command)
     }
 }

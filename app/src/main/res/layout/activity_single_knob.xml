@@ -26,7 +26,7 @@
     tools:context="com.teamdarkness.godlytorch.SingleKnobActivity">
 
     <com.sdsmdg.harjot.crollerTest.Croller
-        android:id="@+id/bothCroller"
+        android:id="@+id/masterCroller"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerInParent="true"
@@ -68,7 +68,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
         tools:ignore="MissingPrefix" />
 
     <ImageButton
