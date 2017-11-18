@@ -135,8 +135,15 @@ object DeviceList {
                 Device().setName("Redmi Note 3")
                         .setDeviceId("kenzo")
                         .isDualTone(false)
-                        .setBrightnessMax(100)
+                        .setBrightnessMax(190)
                         .setSingleLedFileLocation("flashlight/brightness")
+        )
+        deviceList.add(
+                Device().setName("ZUK Z1")
+                        .setDeviceId("z1")
+                        .isDualTone(false)
+                        .setBrightnessMax(200)
+                        .setSingleLedFileLocation("led:torch_0/brightness")
         )
 
         return deviceList
