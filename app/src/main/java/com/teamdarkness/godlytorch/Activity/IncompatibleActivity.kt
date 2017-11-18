@@ -12,10 +12,10 @@
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
- *     along with Godly Torch. If not, see <http://www.gnu.org/licenses/>.
+ *     along with Godly Torch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.teamdarkness.godlytorch
+package com.teamdarkness.godlytorch.Activity
 
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -31,6 +31,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import com.teamdarkness.godlytorch.R
 import com.teamdarkness.godlytorch.Utils.Common
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 

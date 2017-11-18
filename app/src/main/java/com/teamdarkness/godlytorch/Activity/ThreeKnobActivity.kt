@@ -15,21 +15,18 @@
  *     along with Godly Torch. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.teamdarkness.godlytorch
+package com.teamdarkness.godlytorch.Activity
 
-import android.annotation.SuppressLint
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
-import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.Toast
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
+import com.teamdarkness.godlytorch.R
 import com.teamdarkness.godlytorch.Utils.Device
 import com.teamdarkness.godlytorch.Utils.DeviceList
 import com.teamdarkness.godlytorch.Utils.Utils.runCommand

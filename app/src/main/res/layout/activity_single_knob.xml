@@ -23,7 +23,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:ignore="MissingPrefix"
-    tools:context="com.teamdarkness.godlytorch.SingleKnobActivity">
+    tools:context="com.teamdarkness.godlytorch.Activity.SingleKnobActivity">
 
     <com.sdsmdg.harjot.crollerTest.Croller
         android:id="@+id/masterCroller"

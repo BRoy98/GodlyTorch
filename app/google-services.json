@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "619050989138",
+    "firebase_url": "https://goldytorch.firebaseio.com",
+    "project_id": "goldytorch",
+    "storage_bucket": "goldytorch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:619050989138:android:bfeb5aef0b0cfaec",
+        "android_client_info": {
+          "package_name": "com.teamdarkness.godlytorch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "619050989138-9rkm17omm0k8t4aqiguflh47togp7f5v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teamdarkness.godlytorch",
+            "certificate_hash": "42749678b33d4446f1a9d0741686005fb16e91b9"
+          }
+        },
+        {
+          "client_id": "619050989138-oket2k37hmqchh6kjrphe8ah8ca00nuv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnZcei4C3xSbEx7kgRWym7ki2m3IL8j5g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "619050989138-oket2k37hmqchh6kjrphe8ah8ca00nuv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

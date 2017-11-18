@@ -17,6 +17,7 @@
 
 package com.teamdarkness.godlytorch.Utils
 
+import android.content.SharedPreferences
 import eu.chainfire.libsuperuser.Shell
 import org.jetbrains.anko.doAsync
 
@@ -28,5 +29,74 @@ object Utils {
         doAsync {
             Shell.SU.run(cmd)
         }
+    }
+
+    fun checkSupport(mSharedPreferences: SharedPreferences): DeviceResult {
+
+        val deviceList: ArrayList<Device> = DeviceList.getDevices()
+        val deviceId = Common().getDeviceId().toLowerCase()
+        val deviceProduct = android.os.Build.PRODUCT.toLowerCase()
+        var deviceProductSplit = ""
+        var result = DeviceResult()
+
+        val editor = mSharedPreferences.edit()
+
+        val prefDevice = mSharedPreferences.getString("device", null)
+        val prefDeviceId = mSharedPreferences.getString("deviceId", null)
+        val prefDeviceType = mSharedPreferences.getBoolean("deviceDualTone", false)
+
+        if (prefDevice == deviceId && prefDeviceId != null) {
+            result.isSupported = true
+            result.deviceId = prefDeviceId
+            result.isDualTone = prefDeviceType
+            return result
+        }
+
+        if (deviceProduct.contains("_")) {
+            val product = deviceProduct.split("_")
+            deviceProductSplit = product[1]
+        }
+
+        for ((i, device) in deviceList.withIndex()) {
+            when {
+                device.deviceId.toLowerCase().contains(deviceId) -> {
+                    editor.putString("device", device.deviceId)
+                    editor.putString("deviceId", deviceId)
+                    editor.putBoolean("deviceDualTone", device.isDualTone)
+                    editor.apply()
+                    result.isSupported = true
+                    result.deviceId = device.deviceId
+                    result.isDualTone = device.isDualTone
+                    return result
+                }
+                device.deviceId.toLowerCase().contains(deviceProduct) -> {
+                    editor.putString("device", device.deviceId)
+                    editor.putString("deviceId", deviceProduct)
+                    editor.putBoolean("deviceDualTone", device.isDualTone)
+                    editor.apply()
+                    result.isSupported = true
+                    result.deviceId = device.deviceId
+                    result.isDualTone = device.isDualTone
+                    return result
+                }
+                deviceProductSplit.isNotEmpty() && device.deviceId.toLowerCase().contains(deviceProductSplit) -> {
+                    editor.putString("device", device.deviceId)
+                    editor.putString("deviceId", deviceProductSplit)
+                    editor.putBoolean("deviceDualTone", device.isDualTone)
+                    editor.apply()
+                    result.isSupported = true
+                    result.deviceId = device.deviceId
+                    result.isDualTone = device.isDualTone
+                    return result
+                }
+                i == deviceList.size - 1 -> {
+                    return result
+                }
+                else -> {
+                }
+            }
+
+        }
+        return result
     }
 }

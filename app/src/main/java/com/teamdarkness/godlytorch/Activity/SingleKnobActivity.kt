@@ -15,18 +15,21 @@
  *     along with Godly Torch. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.teamdarkness.godlytorch
+package com.teamdarkness.godlytorch.Activity
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
+import com.teamdarkness.godlytorch.R
 import com.teamdarkness.godlytorch.Utils.Device
 import com.teamdarkness.godlytorch.Utils.DeviceList
 import com.teamdarkness.godlytorch.Utils.Utils
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 class SingleKnobActivity : AppCompatActivity() {
@@ -116,5 +119,38 @@ class SingleKnobActivity : AppCompatActivity() {
                 getString(R.string.cmd_sleep) +
                 String.format(getString(R.string.cmd_echo), singleLed, singleLedFileLocation)
         return Utils.runCommand(command)
+    }
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+
+            val alertDialogBuilder = ProgressDialog.show(this, "Quit", "Please wait...")
+
+            if (isUnsupported) {
+                alertDialogBuilder.cancel()
+
+                finishAndRemoveTask()
+                return
+            } else {
+                alertDialogBuilder.setCancelable(false)
+                alertDialogBuilder.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                alertDialogBuilder.show()
+            }
+
+            controlLed(0)
+
+            Handler().postDelayed({
+                alertDialogBuilder.dismiss()
+                finishAffinity()
+            }, 1000)
+
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+
+        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+
     }
 }

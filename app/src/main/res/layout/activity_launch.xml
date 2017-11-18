@@ -23,7 +23,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="#080808"
-    tools:context="com.teamdarkness.godlytorch.LaunchActivity">
+    tools:context="com.teamdarkness.godlytorch.Activity.LaunchActivity">
 
     <TextView
         android:id="@+id/logText"
