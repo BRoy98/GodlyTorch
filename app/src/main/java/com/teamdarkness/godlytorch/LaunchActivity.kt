@@ -86,8 +86,8 @@ class LaunchActivity : AppCompatActivity() {
 
     private fun checkSupport(): DeviceResult {
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
-        val deviceId = Common().getDeviceId()
-        val deviceProduct = android.os.Build.PRODUCT
+        val deviceId = Common().getDeviceId().toLowerCase()
+        val deviceProduct = android.os.Build.PRODUCT.toLowerCase()
         var deviceProductSplit = ""
         var result = DeviceResult()
 
@@ -98,19 +98,19 @@ class LaunchActivity : AppCompatActivity() {
 
         for ((i, device) in deviceList.withIndex()) {
             when {
-                device.deviceId.contains(deviceId) -> {
+                device.deviceId.toLowerCase().contains(deviceId) -> {
                     result.isSupported = true
                     result.deviceId = device.deviceId
                     result.isDualTone = device.isDualTone
                     return result
                 }
-                device.deviceId.contains(deviceProduct) -> {
+                device.deviceId.toLowerCase().contains(deviceProduct) -> {
                     result.isSupported = true
                     result.deviceId = device.deviceId
                     result.isDualTone = device.isDualTone
                     return result
                 }
-                deviceProductSplit.isNotEmpty() && device.deviceId.contains(deviceProductSplit) -> {
+                deviceProductSplit.isNotEmpty() && device.deviceId.toLowerCase().contains(deviceProductSplit) -> {
                     result.isSupported = true
                     result.deviceId = device.deviceId
                     result.isDualTone = device.isDualTone

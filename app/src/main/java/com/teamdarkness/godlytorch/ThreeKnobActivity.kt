@@ -82,7 +82,7 @@ class ThreeKnobActivity : AppCompatActivity() {
 
         if (deviceId != null && deviceId.isNotEmpty()) {
             for (device in deviceList) {
-                if (device.deviceId == deviceId) {
+                if (device.deviceId.toLowerCase() == deviceId) {
                     this.isUnsupported = false
                     this.brightnessMax = device.brightnessMax
                     this.whiteLedFileLocation = device.whiteLedFileLocation
