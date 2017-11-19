@@ -256,7 +256,7 @@ class ThreeKnobActivity : AppCompatActivity() {
             Handler().postDelayed({
                 alertDialogBuilder.dismiss()
                 finishAffinity()
-            }, 1000)
+            }, 300)
 
             return
         }
