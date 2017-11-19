@@ -145,6 +145,13 @@ object DeviceList {
                         .setBrightnessMax(200)
                         .setSingleLedFileLocation("led:torch_0/brightness")
         )
+        deviceList.add(
+                Device().setName("Oneplus One")
+                        .setDeviceId("bacon")
+                        .isDualTone(false)
+                        .setBrightnessMax(250)
+                        .setSingleLedFileLocation("torch-light0/brightness")
+        )
 
         return deviceList
     }
