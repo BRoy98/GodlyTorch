@@ -78,6 +78,6 @@ class LaunchActivity : AppCompatActivity() {
                 logText.text = getString(R.string.root_denied)
                 progressBar.visibility = View.INVISIBLE
             }
-        }, 1000)
+        }, 500)
     }
 }
