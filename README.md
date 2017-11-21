@@ -8,12 +8,13 @@ A Torch app that can manage specific LEDs of flash and control intensity.
 
 **NEEDS ROOT !**
 
-Working
+Features
 ------------
-1. Knobs to control specific LED of flash as torch and control intensity thru knobs..
-2. Pretty simple utility...
-3. Nothing else..
-4. Will add QS control as well
+1. Control specific LED of flash as torch for dual tone LED devices.
+2. Control intensity for LED through knobs.
+3. Double tap knobs to toggle LED.
+4. Quick settings tiles for android N and up devices.
+3. More coming soon!
 
 Credits
 ----------
@@ -25,9 +26,8 @@ Thanks to a [**Dušan Uverić**](https://github.com/uvera/) for a poorly written
 
 Contributions
 ------------
-Feel free to fork this project, work on it and then make a pull request against DEV branch. Most of the times We will accept them if they add something valuable to the code.
+Feel free to fork this project, work on it and then make a pull request against **DEV** branch. Most of the times We will accept them if they add something valuable to the code.
 
 Donation
 -----------
-
-Will have to think of that!
+Will have to think of that! :no_mouth:
