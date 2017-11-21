@@ -45,23 +45,24 @@ class YellowTileService : TileService() {
     private lateinit var mFirebaseAnalytics: FirebaseAnalytics
     private val TILE_STATUS = "yellowTileStatus"
 
-    override fun onTileAdded() {
-        super.onTileAdded()
+    override fun onStartListening() {
+        super.onStartListening()
         val prefs = applicationContext.getSharedPreferences(MAIN_PREFERENCE,
                 Context.MODE_PRIVATE)
         val result = checkSupport(prefs)
-        if (result.isSupported) {
-            if (result.isDualTone) {
-                qsTile.label = "Yellow Torch"
-                qsTile.state = Tile.STATE_INACTIVE
+        if (qsTile != null)
+            if (result.isSupported) {
+                if (result.isDualTone) {
+                    qsTile.label = "Yellow Torch"
+                    qsTile.state = Tile.STATE_INACTIVE
+                } else {
+                    qsTile.label = "Yellow Torch Unsupported"
+                    qsTile.state = Tile.STATE_UNAVAILABLE
+                }
             } else {
-                qsTile.label = "Yellow Torch Unsupported"
+                qsTile.label = "Unsupported Device"
                 qsTile.state = Tile.STATE_UNAVAILABLE
             }
-        } else {
-            qsTile.label = "Unsupported Device"
-            qsTile.state = Tile.STATE_UNAVAILABLE
-        }
         qsTile.updateTile()
     }
 
