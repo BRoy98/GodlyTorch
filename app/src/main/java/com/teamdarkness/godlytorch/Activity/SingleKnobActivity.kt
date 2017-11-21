@@ -27,6 +27,10 @@ import com.crashlytics.android.Crashlytics
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
 import com.teamdarkness.godlytorch.R
+import com.teamdarkness.godlytorch.Utils.Constrains
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_FIRST_INITIALIZATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SINGLE_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Device
 import com.teamdarkness.godlytorch.Utils.DeviceList
 import com.teamdarkness.godlytorch.Utils.Utils
@@ -53,6 +57,9 @@ class SingleKnobActivity : AppCompatActivity() {
 
         val deviceId = this.intent?.getStringExtra("device_id")
 
+        val pref = applicationContext.getSharedPreferences("MainPref", 0)
+        val editor = pref.edit()
+
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
 
         val masterCroller: Croller = findViewById(R.id.masterCroller)
@@ -63,6 +70,10 @@ class SingleKnobActivity : AppCompatActivity() {
                     this.isUnsupported = false
                     this.brightnessMax = device.brightnessMax
                     this.singleLedFileLocation = device.singleLedFileLocation
+                    editor.putInt(PREF_BRIGHTNESS_MAX, brightnessMax)
+                    editor.putString(PREF_SINGLE_FILE_LOCATION , singleLedFileLocation)
+                    editor.putBoolean(PREF_FIRST_INITIALIZATION, true)
+                    editor.apply()
                 }
             }
         }

@@ -32,7 +32,10 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import com.teamdarkness.godlytorch.R
-import com.teamdarkness.godlytorch.Utils.Common
+import com.teamdarkness.godlytorch.Utils.Utils.fromHtml
+import com.teamdarkness.godlytorch.Utils.Utils.getDeviceId
+import com.teamdarkness.godlytorch.Utils.Utils.getDeviceName
+import com.teamdarkness.godlytorch.Utils.Utils.getSystemProp
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 
@@ -58,7 +61,7 @@ class IncompatibleActivity : AppCompatActivity() {
             Log.i("DDDADADJADJADAD", "DADDAD")
             sendMail("rohan.kumquat@gmail.com") }*/
 
-        incompatibleText.text = Common().fromHtml(String.format(getString(R.string.incompatible_message), "${Common().getDeviceName()} (${Common().getDeviceId()})"))
+        incompatibleText.text = fromHtml(String.format(getString(R.string.incompatible_message), "${getDeviceName()} (${getDeviceId()})"))
 
         tryButton.setOnClickListener {
             val intent = Intent(this@IncompatibleActivity, ThreeKnobActivity::class.java)
@@ -98,10 +101,10 @@ class IncompatibleActivity : AppCompatActivity() {
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Get help on Godly Torch")
         emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Write your message here...\n\n-------------------------\n" +
                 "REQUIRED DEVICE DETAILS. DO NOT MODIFY!\n\n" +
-                "ro.build.version.sdk: ${Common().getSystemProp("ro.build.version.sdk")} \n" +
-                "ro.build.version.release: ${Common().getSystemProp("ro.build.version.release")} \n" +
-                "ro.product.device: ${Common().getDeviceId()} \n" +
-                "ro.product.model: ${Common().getDeviceName()} \n" +
+                "ro.build.version.sdk: ${getSystemProp("ro.build.version.sdk")} \n" +
+                "ro.build.version.release: ${getSystemProp("ro.build.version.release")} \n" +
+                "ro.product.device: ${getDeviceId()} \n" +
+                "ro.product.model: ${getDeviceName()} \n" +
                 "android.os.Build.PRODUCT: ${android.os.Build.PRODUCT} \n")
         emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {

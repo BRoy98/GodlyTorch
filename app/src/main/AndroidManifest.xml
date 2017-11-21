@@ -39,6 +39,34 @@
         <activity
             android:name=".Activity.IncompatibleActivity"
             android:theme="@style/LaunchTheme" />
+        <service
+            android:name="com.teamdarkness.godlytorch.Service.MasterTileService"
+            android:icon="@drawable/tile_master"
+            android:label="Master Control"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.teamdarkness.godlytorch.Service.WhiteTileService"
+            android:icon="@drawable/ic_tile_white"
+            android:label="White Torch"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.teamdarkness.godlytorch.Service.YellowTileService"
+            android:icon="@drawable/ic_tile_yellow"
+            android:label="Yellow Torch"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <meta-data android:name="firebase_crashlytics_collection_enabled" android:value="false" />
     </application>
 
 </manifest>

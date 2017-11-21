@@ -25,9 +25,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import com.crashlytics.android.Crashlytics
 
 import com.teamdarkness.godlytorch.R
+import com.teamdarkness.godlytorch.Utils.Constrains.MAIN_PREFERENCE
 import com.teamdarkness.godlytorch.Utils.Utils.checkSupport
 import com.teamdarkness.godlytorch.Utils.Utils.askRoot
 
@@ -41,7 +41,7 @@ class LaunchActivity : AppCompatActivity() {
         val logText: TextView = findViewById(R.id.logText)
         val progressBar: ProgressBar = findViewById(R.id.progressBar)
 
-        val pref = applicationContext.getSharedPreferences("MainPref", 0)
+        val pref = applicationContext.getSharedPreferences(MAIN_PREFERENCE, 0)
 
         logText.text = getString(R.string.root_check)
         progressBar.visibility = View.VISIBLE

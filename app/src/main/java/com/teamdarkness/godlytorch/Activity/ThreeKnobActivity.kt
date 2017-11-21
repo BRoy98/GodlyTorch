@@ -27,6 +27,11 @@ import android.widget.Toast
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
 import com.teamdarkness.godlytorch.R
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_FIRST_INITIALIZATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TOGGLE_FILE_LOCATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_WHITE_FILE_LOCATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_YELLOW_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Device
 import com.teamdarkness.godlytorch.Utils.DeviceList
 import com.teamdarkness.godlytorch.Utils.Utils.runCommand
@@ -68,6 +73,9 @@ class ThreeKnobActivity : AppCompatActivity() {
         val yellowCroller: Croller = findViewById(R.id.yellowCroller)
         val settingsButton: ImageButton = findViewById(R.id.settingsButton)
 
+        val pref = applicationContext.getSharedPreferences("MainPref", 0)
+        val editor = pref.edit()
+
         val deviceId = this.intent?.getStringExtra("device_id")
 
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
@@ -85,6 +93,12 @@ class ThreeKnobActivity : AppCompatActivity() {
                     this.whiteLedFileLocation = device.whiteLedFileLocation
                     this.yellowLedFileLocation = device.yellowLedFileLocation
                     this.toggleFileLocation = device.toggleFileLocation
+                    editor.putInt(PREF_BRIGHTNESS_MAX, brightnessMax)
+                    editor.putString(PREF_WHITE_FILE_LOCATION, whiteLedFileLocation)
+                    editor.putString(PREF_YELLOW_FILE_LOCATION, yellowLedFileLocation)
+                    editor.putString(PREF_TOGGLE_FILE_LOCATION, toggleFileLocation)
+                    editor.putBoolean(PREF_FIRST_INITIALIZATION, true)
+                    editor.apply()
                 }
             }
         }

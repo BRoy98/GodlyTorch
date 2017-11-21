@@ -18,8 +18,17 @@
 package com.teamdarkness.godlytorch.Utils
 
 import android.content.SharedPreferences
+import android.os.Build
+import android.support.annotation.NonNull
+import android.text.Html
+import android.text.Spanned
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_DEVICE
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_DEVICE_ID
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_IS_DUAL_TONE
 import eu.chainfire.libsuperuser.Shell
 import org.jetbrains.anko.doAsync
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 object Utils {
 
@@ -34,16 +43,16 @@ object Utils {
     fun checkSupport(mSharedPreferences: SharedPreferences): DeviceResult {
 
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
-        val deviceId = Common().getDeviceId().toLowerCase()
+        val deviceId = getDeviceId().toLowerCase()
         val deviceProduct = android.os.Build.PRODUCT.toLowerCase()
         var deviceProductSplit = ""
         var result = DeviceResult()
 
         val editor = mSharedPreferences.edit()
 
-        val prefDevice = mSharedPreferences.getString("device", null)
-        val prefDeviceId = mSharedPreferences.getString("deviceId", null)
-        val prefDeviceType = mSharedPreferences.getBoolean("deviceDualTone", false)
+        val prefDevice = mSharedPreferences.getString(PREF_DEVICE, null)
+        val prefDeviceId = mSharedPreferences.getString(PREF_DEVICE_ID, null)
+        val prefDeviceType = mSharedPreferences.getBoolean(PREF_IS_DUAL_TONE, false)
 
         if (prefDevice == deviceId && prefDeviceId != null) {
             result.isSupported = true
@@ -60,9 +69,9 @@ object Utils {
         for ((i, device) in deviceList.withIndex()) {
             when {
                 device.deviceId.toLowerCase().contains(deviceId) -> {
-                    editor.putString("device", device.deviceId)
-                    editor.putString("deviceId", deviceId)
-                    editor.putBoolean("deviceDualTone", device.isDualTone)
+                    editor.putString(PREF_DEVICE, device.deviceId)
+                    editor.putString(PREF_DEVICE_ID, deviceId)
+                    editor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
                     editor.apply()
                     result.isSupported = true
                     result.deviceId = device.deviceId
@@ -70,9 +79,9 @@ object Utils {
                     return result
                 }
                 device.deviceId.toLowerCase().contains(deviceProduct) -> {
-                    editor.putString("device", device.deviceId)
-                    editor.putString("deviceId", deviceProduct)
-                    editor.putBoolean("deviceDualTone", device.isDualTone)
+                    editor.putString(PREF_DEVICE, device.deviceId)
+                    editor.putString(PREF_DEVICE_ID, deviceProduct)
+                    editor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
                     editor.apply()
                     result.isSupported = true
                     result.deviceId = device.deviceId
@@ -80,9 +89,9 @@ object Utils {
                     return result
                 }
                 deviceProductSplit.isNotEmpty() && device.deviceId.toLowerCase().contains(deviceProductSplit) -> {
-                    editor.putString("device", device.deviceId)
-                    editor.putString("deviceId", deviceProductSplit)
-                    editor.putBoolean("deviceDualTone", device.isDualTone)
+                    editor.putString(PREF_DEVICE, device.deviceId)
+                    editor.putString(PREF_DEVICE_ID, deviceProductSplit)
+                    editor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
                     editor.apply()
                     result.isSupported = true
                     result.deviceId = device.deviceId
@@ -98,5 +107,31 @@ object Utils {
 
         }
         return result
+    }
+
+
+
+    fun getDeviceId(): String = getSystemProp("ro.product.device")
+
+    fun getDeviceName(): String = getSystemProp("ro.product.model")
+
+    fun getSystemProp(@NonNull propName: String): String {
+        var line = ""
+        try {
+            val process: Process = Runtime.getRuntime().exec("getprop $propName")
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+            line = reader.readLine()
+            process.destroy()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return line
+    }
+
+    @NonNull
+    fun fromHtml(@NonNull source: String): Spanned {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
+        } else Html.fromHtml(source)
     }
 }

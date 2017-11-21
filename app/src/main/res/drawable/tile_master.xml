@@ -1,0 +1,21 @@
+<!--
+  ~ This file is part of Godly Torch.
+  ~
+  ~     Godly Torch is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Godly Torch is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Godly Torch.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<vector android:height="24dp" android:viewportHeight="841.75"
+    android:viewportWidth="841.75" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
+    <path android:fillColor="#FFF" android:pathData="M420.9,0C188.4,0 0,188.4 0,420.9S188.4,841.8 420.9,841.8 841.8,653.3 841.8,420.9 653.3,0 420.9,0ZM206.1,513.1 L378.4,340.8l-102.3,1.1 263.8,-225L395.6,293.4 494.6,287 322.4,470l81.8,4.3L132.9,678.9 298.7,513.1ZM650.7,344 L478.4,527l81.8,4.3L288.9,735.9 454.7,570.1h-92.6L534.4,397.8l-102.3,1.1 263.8,-225L551.6,350.4Z"/>
+</vector>

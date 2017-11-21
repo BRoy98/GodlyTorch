@@ -4,13 +4,31 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
-    defaultConfig {
-        applicationId "com.teamdarkness.godlytorch"
-        minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    def versionProp = file('version.properties')
+    if (versionProp.canRead()) {
+
+        // Get properties from version.properties
+        Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionProp))
+
+        // Increase versionCode
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+        // Write new versionCode to version.properties
+        versionProps['VERSION_CODE'] = code.toString()
+        versionProps.store(versionProp.newWriter(), null)
+
+        defaultConfig {
+            applicationId "com.teamdarkness.godlytorch"
+            minSdkVersion 21
+            targetSdkVersion 26
+            versionCode code
+            versionName "1.1.0"
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        }
+    } else {
+        throw new GradleException("Could not read version.properties!")
     }
     buildTypes {
         release {

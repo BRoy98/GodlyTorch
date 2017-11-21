@@ -15,20 +15,25 @@
  *     along with Godly Torch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.teamdarkness.godlytorch
+package com.teamdarkness.godlytorch.Dialog;
 
-import android.app.Application
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 
-import com.crashlytics.android.core.CrashlyticsCore
-import io.fabric.sdk.android.Fabric
+public class TileDialog {
+    public static AlertDialog getDialog(Context context, String title, String message) {
 
-class MainApplication : Application() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
 
-    override fun onCreate() {
-        super.onCreate()
-        val fabric = Fabric.Builder(this)
-                .kits(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build()
-        Fabric.with(fabric)
+        return builder.create();
     }
 }

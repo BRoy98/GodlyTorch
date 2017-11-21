@@ -29,5 +29,4 @@
     <string name="device_incompatible">Device Incompatible</string>
     <string name="incompatible_message"><![CDATA[<b>%1$s is not officially supported by us.</b> <br><br>You can always contact us for your device support. We are more than happy to help you! You must provide us proper details about your device to get official support. <br><br>You can try the app on your device <b>on your own risk</b>.]]></string>
     <string name="contact_us">Contact Us</string>
-    
 </resources>

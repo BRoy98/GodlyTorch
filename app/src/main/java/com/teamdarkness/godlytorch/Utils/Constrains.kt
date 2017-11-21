@@ -15,20 +15,22 @@
  *     along with Godly Torch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.teamdarkness.godlytorch
+package com.teamdarkness.godlytorch.Utils
 
-import android.app.Application
+object Constrains {
 
-import com.crashlytics.android.core.CrashlyticsCore
-import io.fabric.sdk.android.Fabric
+    var MAIN_PREFERENCE = "MainPref"
+    var PREF_DEVICE_ID = "deviceId"
+    var PREF_DEVICE = "device"
+    val PREF_FIRST_INITIALIZATION = "filesInitialised"
+    val PREF_IS_DUAL_TONE = "deviceDualTone"
+    val PREF_SINGLE_FILE_LOCATION = "singleLedFileLocation"
+    val PREF_WHITE_FILE_LOCATION = "whiteLedFileLocation"
+    val PREF_YELLOW_FILE_LOCATION = "yellowLedFileLocation"
+    val PREF_TOGGLE_FILE_LOCATION = "toggleFileLocation"
+    val PREF_BRIGHTNESS_MAX = "brightnessMax"
+    val PREF_TILE_WHITE_ON = "tileWhiteIsOn"
+    val PREF_TILE_YELLOW_ON = "tileYellowIsOn"
+    val PREF_TILE_MASTER_ON = "tileMasterIsOn"
 
-class MainApplication : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        val fabric = Fabric.Builder(this)
-                .kits(CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
-                .build()
-        Fabric.with(fabric)
-    }
 }
