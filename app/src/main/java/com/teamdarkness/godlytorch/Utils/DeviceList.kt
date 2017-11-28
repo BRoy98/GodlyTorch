@@ -17,12 +17,15 @@
 
 package com.teamdarkness.godlytorch.Utils
 
+import android.util.Log
+
 object DeviceList {
 
     var deviceList: ArrayList<Device> = java.util.ArrayList()
 
     fun getDevices(): ArrayList<Device> {
         deviceList.clear()
+        // Redmi
         deviceList.add(
                 Device().setName("Mi 5")
                         .setDeviceId("gemini")
@@ -60,69 +63,6 @@ object DeviceList {
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
-                Device().setName("Moto G5 Plus")
-                        .setDeviceId("potter")
-                        .isDualTone(true)
-                        .setBrightnessMax(255)
-                        .setYellowLedFileLocation("led:torch_1/brightness")
-                        .setWhiteLedFileLocation("led:torch_0/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
-        deviceList.add(
-                Device().setName("Moto G5")
-                        .setDeviceId("cedric")
-                        .isDualTone(true)
-                        .setBrightnessMax(255)
-                        .setYellowLedFileLocation("led:torch_0/brightness")
-                        .setWhiteLedFileLocation("led:torch_1/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
-        deviceList.add(
-                Device().setName("Lenovo P2")
-                        .setDeviceId("kuntao")
-                        .isDualTone(true)
-                        .setBrightnessMax(255)
-                        .setYellowLedFileLocation("led:torch_0/brightness")
-                        .setWhiteLedFileLocation("led:torch_1/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
-        deviceList.add(
-                Device().setName("Lenovo P2")
-                        .setDeviceId("p2a42")
-                        .isDualTone(true)
-                        .setBrightnessMax(255)
-                        .setYellowLedFileLocation("led:torch_0/brightness")
-                        .setWhiteLedFileLocation("led:torch_1/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
-        deviceList.add(
-                Device().setName("Lenovo P2")
-                        .setDeviceId("p2c72")
-                        .isDualTone(true)
-                        .setBrightnessMax(255)
-                        .setYellowLedFileLocation("led:torch_0/brightness")
-                        .setWhiteLedFileLocation("led:torch_1/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
-        deviceList.add(
-                Device().setName("Lenovo P2")
-                        .setDeviceId("p2")
-                        .isDualTone(true)
-                        .setBrightnessMax(255)
-                        .setYellowLedFileLocation("led:torch_0/brightness")
-                        .setWhiteLedFileLocation("led:torch_1/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
-        deviceList.add(
-                Device().setName("LeEco Le 2")
-                        .setDeviceId("le_s2")
-                        .isDualTone(true)
-                        .setBrightnessMax(255)
-                        .setYellowLedFileLocation("led:torch_0/brightness")
-                        .setWhiteLedFileLocation("led:torch_1/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
-        deviceList.add(
                 Device().setName("Mi Max")
                         .setDeviceId("hydrogen")
                         .isDualTone(true)
@@ -147,6 +87,82 @@ object DeviceList {
                         .setBrightnessMax(190)
                         .setSingleLedFileLocation("flashlight/brightness")
         )
+        // Motorola
+        deviceList.add(
+                Device().setName("Moto G5 Plus")
+                        .setDeviceId("potter")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_1/brightness")
+                        .setWhiteLedFileLocation("led:torch_0/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Moto G5")
+                        .setDeviceId("cedric")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Moto G4 Plus")
+                        .setDeviceId("athene")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        // Lenovo
+        deviceList.add(
+                Device().setName("Lenovo P2 (kuntao)")
+                        .setDeviceId("kuntao")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Lenovo P2 (p2a42)")
+                        .setDeviceId("p2a42")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Lenovo P2 (p2c72)")
+                        .setDeviceId("p2c72")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Lenovo P2 (p2)")
+                        .setDeviceId("p2")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        // LeEco
+        deviceList.add(
+                Device().setName("LeEco Le 2")
+                        .setDeviceId("le_s2")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        // ZUK
         deviceList.add(
                 Device().setName("ZUK Z1")
                         .setDeviceId("z1")
@@ -154,6 +170,7 @@ object DeviceList {
                         .setBrightnessMax(200)
                         .setSingleLedFileLocation("led:torch_0/brightness")
         )
+        // Oneplus
         deviceList.add(
                 Device().setName("Oneplus One")
                         .setDeviceId("bacon")
@@ -164,5 +181,4 @@ object DeviceList {
 
         return deviceList
     }
-
 }
