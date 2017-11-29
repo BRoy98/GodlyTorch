@@ -70,7 +70,7 @@ object DeviceList {
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
-                Device().setName("Mi 3S")
+                Device().setName("Redmi 3S")
                         .setDeviceId("land")
                         .isDualTone(true)
                         .setBrightnessMax(255)
