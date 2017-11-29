@@ -17,11 +17,9 @@
 
 package com.teamdarkness.godlytorch.Utils
 
-import android.util.Log
-
 object DeviceList {
 
-    var deviceList: ArrayList<Device> = java.util.ArrayList()
+    private var deviceList: ArrayList<Device> = java.util.ArrayList()
 
     fun getDevices(): ArrayList<Device> {
         deviceList.clear()

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ This file is part of Godly Torch.
+  ~
+  ~     Godly Torch is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     Godly Torch is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with Godly Torch.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="General" >
+        <com.teamdarkness.godlytorch.Settings.SelectDevicePreference
+            android:title="My device"
+            android:dialogTitle="Change Device"
+            android:key="selectedDevice"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Knobs" >
+        <SwitchPreference
+            android:title="Double Tap to toggle"
+            android:summary="Double tap knob to toggle the respective LED"
+            android:key="doubleTapKnob"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Quick Settings" >
+        <ListPreference
+            android:key="tileBehaviour"
+            android:title="Tile behaviour"
+            android:entries="@array/pref_tile_behaviour_names"
+            android:entryValues="@array/pref_tile_behaviour_values"
+            android:defaultValue="1">
+        </ListPreference>
+        <ListPreference
+            android:key="toggleIntensity"
+            android:title="Toggle intensity"
+            android:entries="@array/pref_toggle_intensity_names"
+            android:entryValues="@array/pref_toggle_intensity_values"
+            android:defaultValue="100">
+        </ListPreference>
+        <ListPreference
+            android:key="intensitySteps"
+            android:title="Intensity steps"
+            android:entries="@array/pref_intensity_step_names"
+            android:entryValues="@array/pref_intensity_step_values"
+            android:defaultValue="5">
+        </ListPreference>
+    </PreferenceCategory>
+
+    <!--<PreferenceCategory android:title="Camera Assistant (Coming soon)" >
+        <SwitchPreference
+            android:enabled="false"
+            android:title="Godly bubble"
+            android:summary="The godly camera flash assistant">
+        </SwitchPreference>
+        <ListPreference
+            android:enabled="false"
+            android:title="Flash timeout"
+            android:summary="3 Sec">
+        </ListPreference>
+    </PreferenceCategory>-->
+
+</PreferenceScreen>

@@ -17,15 +17,23 @@
 
 package com.teamdarkness.godlytorch.Utils
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import android.support.annotation.NonNull
 import android.text.Html
 import android.text.Spanned
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_DEVICE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_DEVICE_ID
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_IS_DUAL_TONE
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SINGLE_FILE_LOCATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TOGGLE_FILE_LOCATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_WHITE_FILE_LOCATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_YELLOW_FILE_LOCATION
 import eu.chainfire.libsuperuser.Shell
+import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -40,26 +48,12 @@ object Utils {
         }
     }
 
-    fun checkSupport(mSharedPreferences: SharedPreferences): DeviceResult {
+    fun checkSupport(context: Context?): Boolean {
 
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
         val deviceId = getDeviceId().toLowerCase()
         val deviceProduct = android.os.Build.PRODUCT.toLowerCase()
         var deviceProductSplit = ""
-        var result = DeviceResult()
-
-        val editor = mSharedPreferences.edit()
-
-        val prefDevice = mSharedPreferences.getString(PREF_DEVICE, null)
-        val prefDeviceId = mSharedPreferences.getString(PREF_DEVICE_ID, null)
-        val prefDeviceType = mSharedPreferences.getBoolean(PREF_IS_DUAL_TONE, false)
-
-        if (prefDevice == deviceId && prefDeviceId != null) {
-            result.isSupported = true
-            result.deviceId = prefDeviceId
-            result.isDualTone = prefDeviceType
-            return result
-        }
 
         if (deviceProduct.contains("_")) {
             val product = deviceProduct.split("_")
@@ -69,47 +63,68 @@ object Utils {
         for ((i, device) in deviceList.withIndex()) {
             when {
                 device.deviceId.toLowerCase().contains(deviceId) -> {
-                    editor.putString(PREF_DEVICE, device.deviceId)
-                    editor.putString(PREF_DEVICE_ID, deviceId)
-                    editor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
-                    editor.apply()
-                    result.isSupported = true
-                    result.deviceId = device.deviceId
-                    result.isDualTone = device.isDualTone
-                    return result
+                    selectDevice(context, device)
+                    return true
                 }
                 device.deviceId.toLowerCase().contains(deviceProduct) -> {
-                    editor.putString(PREF_DEVICE, device.deviceId)
-                    editor.putString(PREF_DEVICE_ID, deviceProduct)
-                    editor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
-                    editor.apply()
-                    result.isSupported = true
-                    result.deviceId = device.deviceId
-                    result.isDualTone = device.isDualTone
-                    return result
+                    selectDevice(context, device)
+                    return true
                 }
                 deviceProductSplit.isNotEmpty() && device.deviceId.toLowerCase().contains(deviceProductSplit) -> {
-                    editor.putString(PREF_DEVICE, device.deviceId)
-                    editor.putString(PREF_DEVICE_ID, deviceProductSplit)
-                    editor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
-                    editor.apply()
-                    result.isSupported = true
-                    result.deviceId = device.deviceId
-                    result.isDualTone = device.isDualTone
-                    return result
+                    selectDevice(context, device)
+                    return true
                 }
                 i == deviceList.size - 1 -> {
-                    return result
+                    return false
                 }
                 else -> {
                 }
             }
-
         }
-        return result
+        return false
     }
 
+    fun readDevice(context: Context): Device? {
+        val device = Device()
+        val defPref = context.defaultSharedPreferences
 
+        defPref.getString(PREF_SELECTED_DEVICE, null)?.let {
+            device.deviceId = defPref.getString(PREF_SELECTED_DEVICE, "")
+            device.isDualTone = defPref.getBoolean(PREF_IS_DUAL_TONE, false)
+            device.whiteLedFileLocation = defPref.getString(PREF_WHITE_FILE_LOCATION, "")
+            device.yellowLedFileLocation = defPref.getString(PREF_YELLOW_FILE_LOCATION, "")
+            device.toggleFileLocation = defPref.getString(PREF_TOGGLE_FILE_LOCATION, "")
+            device.singleLedFileLocation = defPref.getString(PREF_SINGLE_FILE_LOCATION, "")
+            return device
+        }
+        return null
+    }
+
+    fun selectDevice(context: Context?, device: Device?) {
+        device?.let {
+            val defPref = context?.defaultSharedPreferences
+
+            defPref?.let {
+                val prefEditor = defPref.edit()
+
+                prefEditor.putString(PREF_SELECTED_DEVICE, device.deviceId)
+                prefEditor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
+                prefEditor.putInt(PREF_BRIGHTNESS_MAX, device.brightnessMax)
+                if (device.isDualTone) {
+                    prefEditor.putString(PREF_WHITE_FILE_LOCATION, device.whiteLedFileLocation)
+                    prefEditor.putString(PREF_YELLOW_FILE_LOCATION, device.yellowLedFileLocation)
+                    prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, device.toggleFileLocation)
+                } else {
+                    prefEditor.putString(PREF_SINGLE_FILE_LOCATION, device.singleLedFileLocation)
+                    prefEditor.putString(PREF_WHITE_FILE_LOCATION, "")
+                    prefEditor.putString(PREF_YELLOW_FILE_LOCATION, "")
+                    prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, "")
+                }
+
+                prefEditor.apply()
+            }
+        }
+    }
 
     fun getDeviceId(): String = getSystemProp("ro.product.device")
 
@@ -133,5 +148,48 @@ object Utils {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY)
         } else Html.fromHtml(source)
+    }
+
+    fun getSingleFileLocationById(deviceId: String): String? {
+        return DeviceList.getDevices()
+                .firstOrNull { it.deviceId == deviceId }
+                ?.singleLedFileLocation
+    }
+
+    fun getWhiteLedFileLocationById(deviceId: String): String? {
+        return DeviceList.getDevices()
+                .firstOrNull { it.deviceId == deviceId }
+                ?.whiteLedFileLocation
+    }
+
+    fun getYellowLedFileLocationById(deviceId: String): String? {
+        return DeviceList.getDevices()
+                .firstOrNull { it.deviceId == deviceId }
+                ?.yellowLedFileLocation
+    }
+
+    fun getToggleFileLocationById(deviceId: String): String? {
+        return DeviceList.getDevices()
+                .firstOrNull { it.deviceId == deviceId }
+                ?.toggleFileLocation
+    }
+
+    fun getDeviceNameById(deviceId: String?): String {
+        return DeviceList.getDevices()
+                .firstOrNull { it.deviceId == deviceId }
+                ?.deviceName
+                ?: ""
+    }
+
+    fun getDevicePositionById(deviceId: String): Int {
+        for ((i, dev) in DeviceList.getDevices().withIndex()) {
+            if (dev.deviceId == deviceId)
+                return i
+        }
+        return 0
+    }
+
+    fun getDeviceById(deviceId: String): Device? {
+        return DeviceList.getDevices().firstOrNull { it.deviceId == deviceId }
     }
 }

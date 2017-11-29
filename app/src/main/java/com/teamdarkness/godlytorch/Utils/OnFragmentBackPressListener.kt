@@ -17,8 +17,7 @@
 
 package com.teamdarkness.godlytorch.Utils
 
-class DeviceResult {
-    var isSupported = false
-    var isDualTone = true
-    var deviceId = ""
+interface OnFragmentBackPressListener {
+
+    fun onBackPressed()
 }

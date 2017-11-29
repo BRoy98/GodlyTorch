@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="pref_tile_behaviour_names">
+        <item>Toggle</item>
+        <item>Intensity</item>
+        <!--<item>Popup Dialog</item>-->
+    </string-array>
+
+    <string-array name="pref_tile_behaviour_values">
+        <item>1</item>
+        <item>2</item>
+       <!-- <item>3</item>-->
+    </string-array>
+
+    <string-array name="pref_intensity_step_names">
+        <item>2 steps</item>
+        <item>3 steps</item>
+        <item>4 steps</item>
+        <item>5 steps</item>
+        <item>6 steps</item>
+    </string-array>
+
+    <string-array name="pref_intensity_step_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="pref_toggle_intensity_names">
+        <item>15%</item>
+        <item>35%</item>
+        <item>50%</item>
+        <item>65%</item>
+        <item>85%</item>
+        <item>100%</item>
+    </string-array>
+
+    <string-array name="pref_toggle_intensity_values">
+        <item>15</item>
+        <item>35</item>
+        <item>50</item>
+        <item>65</item>
+        <item>85</item>
+        <item>100</item>
+    </string-array>
+
+</resources>

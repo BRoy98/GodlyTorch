@@ -12,33 +12,35 @@
  *     GNU General Public License for more details.
  *
  *     You should have received a copy of the GNU General Public License
- *     along with Godly Torch. If not, see <http://www.gnu.org/licenses/>.
+ *     along with Godly Torch.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.teamdarkness.godlytorch.Activity
+package com.teamdarkness.godlytorch.Fragment
 
 import android.app.ProgressDialog
-import android.content.Context
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
 import com.sdsmdg.harjot.crollerTest.Croller
 import com.sdsmdg.harjot.crollerTest.OnCrollerChangeListener
+
 import com.teamdarkness.godlytorch.R
-import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
-import com.teamdarkness.godlytorch.Utils.Constrains.PREF_FIRST_INITIALIZATION
+import com.teamdarkness.godlytorch.Settings.SettingsActivity
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_DOUBLE_TONE_ENABLED
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TOGGLE_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_WHITE_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_YELLOW_FILE_LOCATION
-import com.teamdarkness.godlytorch.Utils.Device
-import com.teamdarkness.godlytorch.Utils.DeviceList
-import com.teamdarkness.godlytorch.Utils.Utils.runCommand
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
+import com.teamdarkness.godlytorch.Utils.OnFragmentBackPressListener
+import com.teamdarkness.godlytorch.Utils.Utils
+import org.jetbrains.anko.defaultSharedPreferences
 
-
-class ThreeKnobActivity : AppCompatActivity() {
+class ThreeKnobFragment : Fragment(), OnFragmentBackPressListener {
 
     private var doubleBackToExitPressedOnce = false
     private var whiteSingleTap = false
@@ -47,62 +49,50 @@ class ThreeKnobActivity : AppCompatActivity() {
 
     private var whiteOn = false
     private var yellowOn = false
+    private var doubleTapEnabled = false
 
     private var yellowValue = 0
     private var whiteValue = 0
     private var yellowValueOld = 0
     private var whiteValueOld = 0
 
-    private var whiteLedFileLocation = "led:torch_1/brightness"
-    private var yellowLedFileLocation = "led:torch_0/brightness"
-    private var toggleFileLocation = "led:switch/brightness"
-    private var brightnessMax: Int = 255
+    private var whiteLedFileLocation = ""
+    private var yellowLedFileLocation = ""
+    private var toggleFileLocation = ""
+    private var brightnessMax = 0
 
     private var yellowProgress = 1
     private var whiteProgress = 1
     private var masterProgress = 1
-    private var isUnsupported = true
-    var deviceId = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_three_knob)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_three_knob, container, false)
 
-        val masterCroller: Croller = findViewById(R.id.bothCroller)
-        val whiteCroller: Croller = findViewById(R.id.whiteCroller)
-        val yellowCroller: Croller = findViewById(R.id.yellowCroller)
-        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
+        val masterCroller: Croller = view.findViewById(R.id.bothCroller)
+        val whiteCroller: Croller = view.findViewById(R.id.whiteCroller)
+        val yellowCroller: Croller = view.findViewById(R.id.yellowCroller)
+        val settingsButton: ImageButton = view.findViewById(R.id.settingsButton)
 
-        val pref = applicationContext.getSharedPreferences("MainPref", 0)
-        val editor = pref.edit()
+        val prefs = context?.defaultSharedPreferences
 
-        val deviceId = this.intent?.getStringExtra("device_id")
+        prefs?.let {
+            // get torch file location
+            whiteLedFileLocation = prefs.getString(PREF_WHITE_FILE_LOCATION, null)
+            yellowLedFileLocation = prefs.getString(PREF_YELLOW_FILE_LOCATION, null)
+            toggleFileLocation = prefs.getString(PREF_TOGGLE_FILE_LOCATION, null)
 
-        val deviceList: ArrayList<Device> = DeviceList.getDevices()
+            doubleTapEnabled = prefs.getBoolean(PREF_DOUBLE_TONE_ENABLED, false)
+
+            // get max brightness
+            brightnessMax = prefs.getInt("brightnessMax", 0)
+        }
 
         settingsButton.setOnClickListener {
-            //val intent = Intent(this@ThreeKnobActivity, SettingsActivity::class.java)
-            // startActivity(intent)
+            val intent = Intent(context, SettingsActivity::class.java)
+            startActivity(intent)
         }
-
-        if (deviceId != null && deviceId.isNotEmpty()) {
-            for (device in deviceList) {
-                if (device.deviceId.toLowerCase() == deviceId) {
-                    this.isUnsupported = false
-                    this.brightnessMax = device.brightnessMax
-                    this.whiteLedFileLocation = device.whiteLedFileLocation
-                    this.yellowLedFileLocation = device.yellowLedFileLocation
-                    this.toggleFileLocation = device.toggleFileLocation
-                    editor.putInt(PREF_BRIGHTNESS_MAX, brightnessMax)
-                    editor.putString(PREF_WHITE_FILE_LOCATION, whiteLedFileLocation)
-                    editor.putString(PREF_YELLOW_FILE_LOCATION, yellowLedFileLocation)
-                    editor.putString(PREF_TOGGLE_FILE_LOCATION, toggleFileLocation)
-                    editor.putBoolean(PREF_FIRST_INITIALIZATION, true)
-                    editor.apply()
-                }
-            }
-        }
-
         masterCroller.setOnCrollerChangeListener(object : OnCrollerChangeListener {
 
             override fun onProgressChanged(croller: Croller?, progress: Int) {
@@ -132,14 +122,16 @@ class ThreeKnobActivity : AppCompatActivity() {
             }
 
             override fun onTap(croller: Croller?) {
-                if (masterSingleTap) {
-                    if (masterProgress > 1)
-                        masterCroller.progress = 1
-                    else
-                        masterCroller.progress = 20
+                if (doubleTapEnabled) {
+                    if (masterSingleTap) {
+                        if (masterProgress > 1)
+                            masterCroller.progress = 1
+                        else
+                            masterCroller.progress = 20
+                    }
+                    masterSingleTap = true
+                    Handler().postDelayed({ masterSingleTap = false }, 300)
                 }
-                masterSingleTap = true
-                Handler().postDelayed({ masterSingleTap = false }, 300)
             }
 
             override fun onStartTrackingTouch(croller: Croller?) {
@@ -177,14 +169,16 @@ class ThreeKnobActivity : AppCompatActivity() {
             }
 
             override fun onTap(croller: Croller?) {
-                if (whiteSingleTap) {
-                    if (whiteOn)
-                        whiteCroller.progress = 1
-                    else
-                        whiteCroller.progress = 20
+                if (doubleTapEnabled) {
+                    if (whiteSingleTap) {
+                        if (whiteOn)
+                            whiteCroller.progress = 1
+                        else
+                            whiteCroller.progress = 20
+                    }
+                    whiteSingleTap = true
+                    Handler().postDelayed({ whiteSingleTap = false }, 300)
                 }
-                whiteSingleTap = true
-                Handler().postDelayed({ whiteSingleTap = false }, 300)
             }
 
             override fun onStartTrackingTouch(croller: Croller?) {
@@ -221,14 +215,16 @@ class ThreeKnobActivity : AppCompatActivity() {
             }
 
             override fun onTap(croller: Croller?) {
-                if (yellowSingleTap) {
-                    if (yellowOn)
-                        yellowCroller.progress = 1
-                    else
-                        yellowCroller.progress = 20
+                if (doubleTapEnabled) {
+                    if (yellowSingleTap) {
+                        if (yellowOn)
+                            yellowCroller.progress = 1
+                        else
+                            yellowCroller.progress = 20
+                    }
+                    yellowSingleTap = true
+                    Handler().postDelayed({ yellowSingleTap = false }, 300)
                 }
-                yellowSingleTap = true
-                Handler().postDelayed({ yellowSingleTap = false }, 300)
             }
 
             override fun onStartTrackingTouch(croller: Croller?) {
@@ -244,45 +240,13 @@ class ThreeKnobActivity : AppCompatActivity() {
                 }
             }
         })
-    }
 
-    override fun attachBaseContext(newBase: Context?) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
-    }
-
-    override fun onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-
-            val alertDialogBuilder = ProgressDialog.show(this, "Quit", "Please wait...")
-
-            if (isUnsupported) {
-                alertDialogBuilder.cancel()
-                finishAffinity()
-                return
-            } else {
-                alertDialogBuilder.setCancelable(false)
-                alertDialogBuilder.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                alertDialogBuilder.show()
-            }
-
-            controlLed(0, 0, false)
-
-            Handler().postDelayed({
-                alertDialogBuilder.dismiss()
-                finishAffinity()
-            }, 300)
-
-            return
-        }
-
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
-
-        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-
+        return view
     }
 
     private fun controlLed(whiteLed: Int = 0, yellowLed: Int = 0, torchState: Boolean = false) {
+        if (whiteLedFileLocation.isEmpty() || yellowLedFileLocation.isEmpty() || toggleFileLocation.isEmpty())
+            return
         var torch = 0
         if (torchState)
             torch = this.brightnessMax
@@ -292,6 +256,30 @@ class ThreeKnobActivity : AppCompatActivity() {
                 String.format(getString(R.string.cmd_echo), whiteLed, whiteLedFileLocation) +
                 String.format(getString(R.string.cmd_echo), yellowLed, yellowLedFileLocation) +
                 String.format(getString(R.string.cmd_echo), torch, toggleFileLocation)
-        return runCommand(command)
+        return Utils.runCommand(command)
+    }
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+
+            val alertDialogBuilder = ProgressDialog.show(context, "Quit", "Please wait...")
+            alertDialogBuilder.setCancelable(false)
+            alertDialogBuilder.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            alertDialogBuilder.show()
+
+            controlLed(0)
+
+            Handler().postDelayed({
+                alertDialogBuilder.dismiss()
+                activity?.finishAffinity()
+            }, 300)
+
+            return
+        }
+
+        this.doubleBackToExitPressedOnce = true
+        Toast.makeText(context, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+
+        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
 }

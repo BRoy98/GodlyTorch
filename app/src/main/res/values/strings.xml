@@ -27,6 +27,10 @@
     <string name="not_rooted">Please uninstall me, I don\'t belong here…</string>
     <string name="check_device">Checking device compatibility…</string>
     <string name="device_incompatible">Device Incompatible</string>
-    <string name="incompatible_message"><![CDATA[<b>%1$s is not officially supported by us.</b> <br><br>You can always contact us for your device support. We are more than happy to help you! You must provide us proper details about your device to get official support. <br><br>You can try the app on your device <b>on your own risk</b>.]]></string>
+    <string name="incompatible_message"><![CDATA[<b>%1$s is not officially supported yet.</b> <br><br>Feel free to contact us for your device support. We are more than happy to help you! You must provide us proper details about your device to get official support. <br><br>You can manually change the device below.<br><br><b>Note: Manual device changing may harm your device.</b>]]></string>
     <string name="contact_us">Contact Us</string>
+    <string name="coded_with_love">Coded with love by Team Darkness</string>
+    <string name="no_device_selected">No device selected</string>
+    <string name="btn_select_device">Select device</string>
+    <string name="apply">Apply</string>
 </resources>

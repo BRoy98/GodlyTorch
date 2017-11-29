@@ -18,27 +18,27 @@
 package com.teamdarkness.godlytorch.Service
 
 import android.annotation.TargetApi
-import android.content.Context
 import android.service.quicksettings.TileService
 import android.os.Build
 import android.service.quicksettings.Tile
 import com.teamdarkness.godlytorch.Utils.Utils.askRoot
 import com.teamdarkness.godlytorch.Dialog.TileDialog
 import com.teamdarkness.godlytorch.R
-import com.teamdarkness.godlytorch.Utils.Constrains.MAIN_PREFERENCE
 import com.teamdarkness.godlytorch.Utils.Utils.checkSupport
 import com.teamdarkness.godlytorch.Utils.Utils.runCommand
 import com.google.firebase.analytics.FirebaseAnalytics
 import android.os.Bundle
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
-import com.teamdarkness.godlytorch.Utils.Constrains.PREF_FIRST_INITIALIZATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_IS_DUAL_TONE
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_MASTER_ON
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_WHITE_ON
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_YELLOW_ON
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TOGGLE_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_WHITE_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_YELLOW_FILE_LOCATION
-import org.jetbrains.anko.doAsync
+import com.teamdarkness.godlytorch.Utils.Utils
+import org.jetbrains.anko.defaultSharedPreferences
 
 @TargetApi(Build.VERSION_CODES.N)
 class WhiteTileService : TileService() {
@@ -48,22 +48,26 @@ class WhiteTileService : TileService() {
 
     override fun onStartListening() {
         super.onStartListening()
-        val prefs = applicationContext.getSharedPreferences(MAIN_PREFERENCE,
-                Context.MODE_PRIVATE)
-        val result = checkSupport(prefs)
-        if (qsTile != null)
-            if (result.isSupported) {
-                if (result.isDualTone) {
-                    qsTile.label = "White Torch"
-                    qsTile.state = Tile.STATE_INACTIVE
-                } else {
-                    qsTile.label = "White Torch Unsupported"
-                    qsTile.state = Tile.STATE_UNAVAILABLE
-                }
-            } else {
-                qsTile.label = "Unsupported Device"
-                qsTile.state = Tile.STATE_UNAVAILABLE
-            }
+        val prefs = applicationContext.defaultSharedPreferences
+        // get torch file locations
+        val selectedDevice = prefs.getString(PREF_SELECTED_DEVICE, "")
+        // check for dual tone device
+        val isDualTone = prefs.getBoolean(PREF_IS_DUAL_TONE, true)
+
+        // show no device selected warning
+        if (selectedDevice.isEmpty()) {
+            showDialog(TileDialog.getDialog(this, "Godly Torch",
+                    "No device selected. To use tiles, you must select a device from settings."))
+            return
+        }
+        // show no device selected warning
+        if (isDualTone) {
+            qsTile.label = "White Torch"
+            qsTile.state = Tile.STATE_INACTIVE
+        } else {
+            qsTile.label = "White Torch Unsupported"
+            qsTile.state = Tile.STATE_UNAVAILABLE
+        }
         qsTile.updateTile()
     }
 
@@ -74,16 +78,7 @@ class WhiteTileService : TileService() {
 
     private fun updateTile() {
 
-        val prefs = applicationContext.getSharedPreferences(MAIN_PREFERENCE,
-                Context.MODE_PRIVATE)
-
-        val isInitialised = prefs.getBoolean(PREF_FIRST_INITIALIZATION, false)
-
-        if (!isInitialised) {
-            showDialog(TileDialog.getDialog(this, "Godly Torch",
-                    "Please open the app once before using quick settings tiles."))
-            return
-        }
+        val prefs = applicationContext.defaultSharedPreferences
 
         val yellowTileIsOn = prefs.getBoolean(PREF_TILE_YELLOW_ON, false)
         val masterTileIsOn = prefs.getBoolean(PREF_TILE_MASTER_ON, false)
@@ -115,132 +110,251 @@ class WhiteTileService : TileService() {
             tile.updateTile()
             return
         }
-        val result = checkSupport(prefs)
-        if (result.isSupported) {
-            if (result.isDualTone) {
-                // Read device specific values
-                val whiteLedFileLocation = prefs.getString(PREF_WHITE_FILE_LOCATION, null)
-                val yellowLedFileLocation = prefs.getString(PREF_YELLOW_FILE_LOCATION, null)
-                val toggleFileLocation = prefs.getString(PREF_TOGGLE_FILE_LOCATION, null)
-                val brightnessMax = prefs.getInt(PREF_BRIGHTNESS_MAX, 0)
+        // Read device specific values
+        val whiteLedFileLocation = prefs.getString(PREF_WHITE_FILE_LOCATION, null)
+        val yellowLedFileLocation = prefs.getString(PREF_YELLOW_FILE_LOCATION, null)
+        val toggleFileLocation = prefs.getString(PREF_TOGGLE_FILE_LOCATION, null)
 
-                when (tileStatus) {
-                    0 -> {
-                        val torchVal = (brightnessMax * 15) / 100
-                        val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
-                                getString(R.string.cmd_sleep) +
-                                String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
-                        runCommand(command)
-                        editor.putBoolean(PREF_TILE_WHITE_ON, true)
-                        editor.putInt(TILE_STATUS, 1)
-                        editor.apply()
-                        tile.label = "15%"
-                        tile.state = Tile.STATE_ACTIVE
+        // get max brightness
+        val brightnessMax = prefs.getInt(PREF_BRIGHTNESS_MAX, 0)
 
-                        // Log tile click to analytics[
-                        val bundle = Bundle()
-                        bundle.putString("tile_type", "white")
-                        bundle.putString("device_type", "dual_tone")
-                        mFirebaseAnalytics = FirebaseAnalytics.getInstance(baseContext)
-                        mFirebaseAnalytics.logEvent("tile_click", bundle)
-                    }
-                    1 -> {
-                        val torchVal = (brightnessMax * 35) / 100
-                        val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
-                                getString(R.string.cmd_sleep) +
-                                String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
-                        runCommand(command)
-                        editor.putBoolean(PREF_TILE_WHITE_ON, true)
-                        editor.putInt(TILE_STATUS, 2)
-                        editor.apply()
-                        tile.label = "35%"
-                        tile.state = Tile.STATE_ACTIVE
 
-                    }
-                    2 -> {
-                        val torchVal = (brightnessMax * 50) / 100
-                        val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
-                                getString(R.string.cmd_sleep) +
-                                String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
-                        runCommand(command)
-                        editor.putBoolean(PREF_TILE_WHITE_ON, true)
-                        editor.putInt(TILE_STATUS, 3)
-                        editor.apply()
-                        tile.label = "50%"
-                        tile.state = Tile.STATE_ACTIVE
+        when (prefs.getString("tileBehaviour", "1")) {
+            "1" -> {
+                val toggleIntensity = prefs.getString("toggleIntensity", "100")
+                val currentDevice = Utils.readDevice(baseContext)
 
-                    }
-                    3 -> {
-                        val torchVal = (brightnessMax * 65) / 100
-                        val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
-                                getString(R.string.cmd_sleep) +
-                                String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
-                        runCommand(command)
-                        editor.putBoolean(PREF_TILE_WHITE_ON, true)
-                        editor.putInt(TILE_STATUS, 4)
-                        editor.apply()
-                        tile.label = "65%"
-                        tile.state = Tile.STATE_ACTIVE
+                currentDevice?.let {
+                    if (currentDevice.isDualTone) {
 
-                    }
-                    4 -> {
-                        val torchVal = (brightnessMax * 85) / 100
-                        val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
-                                getString(R.string.cmd_sleep) +
-                                String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
-                        runCommand(command)
-                        editor.putBoolean(PREF_TILE_WHITE_ON, true)
-                        editor.putInt(TILE_STATUS, 5)
-                        editor.apply()
-                        tile.label = "85%"
-                        tile.state = Tile.STATE_ACTIVE
+                        if (tileStatus > 0) {
+                            val command: String = String.format(getString(R.string.cmd_echo), 0, whiteLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), 0, toggleFileLocation)
 
-                    }
-                    5 -> {
-                        val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
-                                getString(R.string.cmd_sleep) +
-                                String.format(getString(R.string.cmd_echo), brightnessMax, whiteLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
-                        runCommand(command)
-                        editor.putBoolean(PREF_TILE_WHITE_ON, true)
-                        editor.putInt(TILE_STATUS, 6)
-                        editor.apply()
-                        tile.label = "100%"
-                        tile.state = Tile.STATE_ACTIVE
+                            runCommand(command)
+                            editor.putInt(TILE_STATUS, 0)
+                            editor.putBoolean(PREF_TILE_WHITE_ON, false)
+                            editor.apply()
+                            tile.label = "White Torch"
+                            tile.state = Tile.STATE_INACTIVE
+                            tile.updateTile()
+                        } else {
+                            val torchVal = (brightnessMax * toggleIntensity.toInt()) / brightnessMax
 
-                    }
-                    6 -> {
-                        val command: String = String.format(getString(R.string.cmd_echo), 0, whiteLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, yellowLedFileLocation) +
-                                String.format(getString(R.string.cmd_echo), 0, toggleFileLocation)
-                        runCommand(command)
-                        editor.putBoolean(PREF_TILE_WHITE_ON, false)
-                        runCommand(command)
-                        editor.putInt(TILE_STATUS, 0)
-                        editor.apply()
-                        tile.label = "White Torch"
-                        tile.state = Tile.STATE_INACTIVE
+                            val command: String = String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
 
+                            runCommand(command)
+                            editor.putInt(TILE_STATUS, 1)
+                            editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.apply()
+                            tile.label = "White Torch"
+                            tile.state = Tile.STATE_ACTIVE
+                            tile.updateTile()
+                        }
                     }
                 }
-                tile.updateTile()
             }
-        } else {
-            tile.state = Tile.STATE_INACTIVE
-            showDialog(TileDialog.getDialog(this, "Godly Torch",
-                    "Your device is not supported."))
-            tile.updateTile()
+
+            "2" -> {
+
+                val intensitySteps = prefs.getString("intensitySteps", "5")
+                val currentDevice = Utils.readDevice(baseContext)
+                currentDevice?.let {
+                    when (tileStatus) {
+                        0 -> {
+                            val torchVal: Int = 100 / (intensitySteps.toInt() + 1)
+
+                            val command = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
+                                    getString(R.string.cmd_sleep) +
+                                    String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
+
+
+                            runCommand(command)
+                            editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.putInt(TILE_STATUS, 1)
+                            editor.apply()
+                            tile.label = "$torchVal%"
+                            tile.state = Tile.STATE_ACTIVE
+                            tile.updateTile()
+                        }
+                        1 -> {
+                            val torchVal: Int = (100 / (intensitySteps.toInt() + 1)) * 2
+
+                            val command = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
+                                    getString(R.string.cmd_sleep) +
+                                    String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
+
+                            runCommand(command)
+                            editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.putInt(TILE_STATUS, 2)
+                            editor.apply()
+                            tile.label = "$torchVal%"
+                            tile.state = Tile.STATE_ACTIVE
+                            tile.updateTile()
+
+                            // Log tile click to analytics
+                            val bundle = Bundle()
+                            bundle.putString("tile_type", "master")
+                            bundle.putString("device_type", "dual_tone")
+                            mFirebaseAnalytics = FirebaseAnalytics.getInstance(baseContext)
+                            mFirebaseAnalytics.logEvent("tile_click", bundle)
+                        }
+                        2 -> {
+                            var torchVal: Int = (100 / (intensitySteps.toInt() + 1)) * 3
+                            if (torchVal > 90)
+                                torchVal = 100
+
+                            if (tileStatus == intensitySteps.toInt() + 1) {
+                                val command = String.format(getString(R.string.cmd_echo), "0", whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", toggleFileLocation)
+
+                                runCommand(command)
+                                editor.putBoolean(PREF_TILE_WHITE_ON, false)
+                                editor.putInt(TILE_STATUS, 0)
+                                editor.apply()
+                                tile.label = "White Torch"
+                                tile.state = Tile.STATE_INACTIVE
+                                tile.updateTile()
+                                return
+                            } else {
+                                val command = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
+                                        getString(R.string.cmd_sleep) +
+                                        String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
+
+                                runCommand(command)
+                            }
+                            editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.putInt(TILE_STATUS, 3)
+                            editor.apply()
+                            tile.label = "$torchVal%"
+                            tile.state = Tile.STATE_ACTIVE
+                            tile.updateTile()
+                        }
+                        3 -> {
+                            val torchVal: Int = (100 / (intensitySteps.toInt() + 1)) * 4
+
+                            if (tileStatus == intensitySteps.toInt() + 1) {
+                                val command = String.format(getString(R.string.cmd_echo), "0", whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", toggleFileLocation)
+
+                                runCommand(command)
+                                editor.putBoolean(PREF_TILE_WHITE_ON, false)
+                                editor.putInt(TILE_STATUS, 0)
+                                editor.apply()
+                                tile.label = "White Torch"
+                                tile.state = Tile.STATE_INACTIVE
+                                tile.updateTile()
+                                return
+                            } else {
+                                val command = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
+                                        getString(R.string.cmd_sleep) +
+                                        String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
+
+                                runCommand(command)
+                            }
+                            editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.putInt(TILE_STATUS, 4)
+                            editor.apply()
+                            tile.label = "$torchVal%"
+                            tile.state = Tile.STATE_ACTIVE
+                            tile.updateTile()
+                        }
+                        4 -> {
+                            val torchVal: Int = (100 / (intensitySteps.toInt() + 1)) * 5
+
+                            if (tileStatus == intensitySteps.toInt() + 1) {
+                                val command = String.format(getString(R.string.cmd_echo), "0", whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", toggleFileLocation)
+
+                                runCommand(command)
+                                editor.putBoolean(PREF_TILE_WHITE_ON, false)
+                                editor.putInt(TILE_STATUS, 0)
+                                editor.apply()
+                                tile.label = "White Torch"
+                                tile.state = Tile.STATE_INACTIVE
+                                tile.updateTile()
+                                return
+                            } else {
+                                val command = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
+                                        getString(R.string.cmd_sleep) +
+                                        String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
+
+                                runCommand(command)
+                            }
+                            editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.putInt(TILE_STATUS, 5)
+                            editor.apply()
+                            tile.label = "$torchVal%"
+                            tile.state = Tile.STATE_ACTIVE
+                            tile.updateTile()
+                        }
+                        5 -> {
+                            var torchVal: Int = (100 / (intensitySteps.toInt() + 1)) * 6
+                            if (torchVal > 90)
+                                torchVal = 100
+
+                            if (tileStatus == intensitySteps.toInt() + 1) {
+                                val command = String.format(getString(R.string.cmd_echo), "0", whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", toggleFileLocation)
+
+                                runCommand(command)
+                                editor.putBoolean(PREF_TILE_WHITE_ON, false)
+                                editor.putInt(TILE_STATUS, 0)
+                                editor.apply()
+                                tile.label = "White Torch"
+                                tile.state = Tile.STATE_INACTIVE
+                                tile.updateTile()
+                                return
+                            } else {
+                                val command = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
+                                        getString(R.string.cmd_sleep) +
+                                        String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                        String.format(getString(R.string.cmd_echo), brightnessMax, toggleFileLocation)
+
+                                runCommand(command)
+                            }
+                            editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.putInt(TILE_STATUS, 6)
+                            editor.apply()
+                            tile.label = "$torchVal%"
+                            tile.state = Tile.STATE_ACTIVE
+                            tile.updateTile()
+
+                        }
+                        6 -> {
+                            val command = String.format(getString(R.string.cmd_echo), "0", whiteLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
+                                    String.format(getString(R.string.cmd_echo), "0", toggleFileLocation)
+
+                            runCommand(command)
+                            editor.putBoolean(PREF_TILE_WHITE_ON, false)
+                            editor.putInt(TILE_STATUS, 0)
+                            editor.apply()
+                            tile.label = "White Torch"
+                            tile.state = Tile.STATE_INACTIVE
+                            tile.updateTile()
+                        }
+                    }
+                }
+            }
         }
         tile.updateTile()
     }

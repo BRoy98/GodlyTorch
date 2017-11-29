@@ -19,10 +19,10 @@ package com.teamdarkness.godlytorch.Utils
 
 object Constrains {
 
-    var MAIN_PREFERENCE = "MainPref"
-    var PREF_DEVICE_ID = "deviceId"
-    var PREF_DEVICE = "device"
-    val PREF_FIRST_INITIALIZATION = "filesInitialised"
+    val PREF_DEVICE_ID = "deviceId"
+    val PREF_DEVICE = "device"
+    val PREF_SELECTED_DEVICE = "selectedDevice"
+    val PREF_DOUBLE_TONE_ENABLED = "doubleTapKnob"
     val PREF_IS_DUAL_TONE = "deviceDualTone"
     val PREF_SINGLE_FILE_LOCATION = "singleLedFileLocation"
     val PREF_WHITE_FILE_LOCATION = "whiteLedFileLocation"

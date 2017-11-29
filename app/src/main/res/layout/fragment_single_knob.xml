@@ -23,22 +23,25 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:ignore="MissingPrefix"
-    tools:context="com.teamdarkness.godlytorch.Activity.ThreeKnobActivity">
+    tools:context="com.teamdarkness.godlytorch.Fragment.SingleKnobFragment">
 
     <com.sdsmdg.harjot.crollerTest.Croller
-        android:id="@+id/bothCroller"
-        android:layout_width="220dp"
+        android:id="@+id/masterCroller"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerInParent="true"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         app:back_circle_color="#EDEDED"
         app:indicator_color="#0B3C49"
         app:indicator_width="10"
         app:is_continuous="false"
         app:label="Master Control"
+        app:label_size="60"
         app:label_color="#ffffff"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -48,80 +51,12 @@
         app:progress_secondary_color="#64ffffff"
         app:start_offset="45" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.31" />
-
-
-    <com.sdsmdg.harjot.crollerTest.Croller
-        android:id="@+id/yellowCroller"
-        android:layout_width="220dp"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:back_circle_color="#EDEDED"
-        app:indicator_color="#0B3C49"
-        app:indicator_width="10"
-        app:is_continuous="false"
-        app:label="Yellow LED"
-        app:label_color="#ffffff"
-        app:layout_constraintBottom_toTopOf="@+id/guideline3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:main_circle_color="#FFFFFF"
-        app:max="20"
-        app:progress_primary_color="#c2e2ea"
-        app:progress_secondary_color="#64ffffff"
-        app:start_offset="45" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.62" />
-
-    <com.sdsmdg.harjot.crollerTest.Croller
-        android:id="@+id/whiteCroller"
-        android:layout_width="220dp"
-        android:layout_height="0dp"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:back_circle_color="#EDEDED"
-        app:indicator_color="#0B3C49"
-        app:indicator_width="10"
-        app:is_continuous="false"
-        app:label="White LED"
-        app:label_color="#ffffff"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline3"
-        app:main_circle_color="#FFFFFF"
-        app:max="20"
-        app:progress_primary_color="#c2e2ea"
-        app:progress_secondary_color="#64ffffff"
-        app:start_offset="45" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.93" />
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         fontPath="fonts/blowbrush.ttf"
-        android:text="coded with love by Team Darkness"
+        android:text="@string/coded_with_love"
         android:textAlignment="center"
         android:textColor="#fff"
         android:textSize="16sp"
@@ -133,7 +68,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline4"
         tools:ignore="MissingPrefix" />
 
     <ImageButton
