@@ -27,6 +27,7 @@ import com.teamdarkness.godlytorch.R
 import com.teamdarkness.godlytorch.Utils.Utils.runCommand
 import com.google.firebase.analytics.FirebaseAnalytics
 import android.os.Bundle
+import android.util.Log
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SINGLE_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_MASTER_ON
@@ -131,7 +132,7 @@ class MasterTileService : TileService() {
                             tile.state = Tile.STATE_INACTIVE
                             tile.updateTile()
                         } else {
-                            val torchVal = (brightnessMax * toggleIntensity.toInt()) / brightnessMax
+                            val torchVal = (brightnessMax * toggleIntensity.toInt()) / 100
 
                             val command: String = String.format(getString(R.string.cmd_echo), "0", toggleFileLocation) +
                                     getString(R.string.cmd_sleep) +

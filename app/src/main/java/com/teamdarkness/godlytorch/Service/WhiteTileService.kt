@@ -140,7 +140,7 @@ class WhiteTileService : TileService() {
                             tile.state = Tile.STATE_INACTIVE
                             tile.updateTile()
                         } else {
-                            val torchVal = (brightnessMax * toggleIntensity.toInt()) / brightnessMax
+                            val torchVal = (brightnessMax * toggleIntensity.toInt()) / 100
 
                             val command: String = String.format(getString(R.string.cmd_echo), torchVal, whiteLedFileLocation) +
                                     String.format(getString(R.string.cmd_echo), "0", yellowLedFileLocation) +
