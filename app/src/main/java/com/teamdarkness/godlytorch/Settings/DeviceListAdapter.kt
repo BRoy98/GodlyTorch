@@ -19,18 +19,22 @@ package com.teamdarkness.godlytorch.Settings
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.TextView
 import com.teamdarkness.godlytorch.R
-import com.teamdarkness.godlytorch.Settings.DevicelistAdapter.DeviceHolder
+import com.teamdarkness.godlytorch.Settings.DeviceListAdapter.DeviceHolder
+import com.teamdarkness.godlytorch.Utils.Constrains
 import com.teamdarkness.godlytorch.Utils.Device
 import com.teamdarkness.godlytorch.Utils.DeviceList
 import com.teamdarkness.godlytorch.Utils.Utils
+import com.teamdarkness.godlytorch.Utils.Utils.getDevicePositionById
+import org.jetbrains.anko.defaultSharedPreferences
 
-class DevicelistAdapter(var selectedDevice: String?, val context: Context?) : RecyclerView.Adapter<DeviceHolder>() {
+class DeviceListAdapter(val context: Context?) : RecyclerView.Adapter<DeviceHolder>() {
 
     override fun getItemCount(): Int {
         return DeviceList.getDevices().size
@@ -53,15 +57,28 @@ class DevicelistAdapter(var selectedDevice: String?, val context: Context?) : Re
 
 
         fun bind(device: Device) {
+
+            val prefs = context?.defaultSharedPreferences
+
+            // get torch file locations
+            var selectedDevice = prefs?.getString(Constrains.PREF_SELECTED_DEVICE, "")
+
             deviceName.text = device.deviceName
             deviceType.text = device.deviceId
             selectedDevice?.let {
                 radioButton.isChecked = device.deviceId == selectedDevice
             }
 
-            itemView.setOnClickListener { radioButton.performClick() }
+            itemView.setOnClickListener {
+                radioButton.performClick()
+            }
 
             radioButton.setOnClickListener {
+                selectedDevice = prefs?.getString(Constrains.PREF_SELECTED_DEVICE, "")
+                val lastSelectPosition = getDevicePositionById(selectedDevice)
+                selectedDevice?.let {
+                    notifyItemChanged(lastSelectPosition)
+                }
                 Utils.selectDevice(context, device)
             }
         }

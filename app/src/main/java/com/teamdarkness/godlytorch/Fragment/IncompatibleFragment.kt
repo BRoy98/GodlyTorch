@@ -19,7 +19,6 @@ package com.teamdarkness.godlytorch.Fragment
 
 
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.ActivityNotFoundException
 import android.os.Bundle
 import android.os.Handler
@@ -36,14 +35,13 @@ import com.teamdarkness.godlytorch.Utils.OnFragmentBackPressListener
 import com.teamdarkness.godlytorch.Utils.Utils.fromHtml
 import com.teamdarkness.godlytorch.Utils.Utils.getDeviceId
 import com.teamdarkness.godlytorch.Utils.Utils.getDeviceName
-import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import com.teamdarkness.godlytorch.Settings.DevicelistAdapter
+import com.teamdarkness.godlytorch.Settings.DeviceListAdapter
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_IS_DUAL_TONE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
 import com.teamdarkness.godlytorch.Utils.Utils
@@ -72,9 +70,6 @@ class IncompatibleFragment : Fragment(), OnFragmentBackPressListener {
 
         val prefs = context?.defaultSharedPreferences
 
-        // get torch file locations
-        val selectedDevice = prefs?.getString(PREF_SELECTED_DEVICE, "")
-
         contactButton.setOnClickListener {
             val colors = arrayOf<CharSequence>("Email Us", "Join Telegram Community")
 
@@ -99,7 +94,7 @@ class IncompatibleFragment : Fragment(), OnFragmentBackPressListener {
             builder.setTitle("Choose device")
             val deviceView = RecyclerView(context)
             deviceView.layoutManager = LinearLayoutManager(context)
-            deviceView.adapter = DevicelistAdapter(selectedDevice, context)
+            deviceView.adapter = DeviceListAdapter(context)
             builder.setView(deviceView)
             builder.setNegativeButton("Cancel", { dialogInterface, _ ->
                 dialogInterface.dismiss()

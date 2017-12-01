@@ -38,7 +38,7 @@ class SelectDevicePreference(context: Context, attrs: AttributeSet?) : DialogPre
     override fun onCreateDialogView(): View {
         val deviceView = RecyclerView(context)
         deviceView.layoutManager = LinearLayoutManager(context)
-        deviceView.adapter = DevicelistAdapter(getPersistedString(null), context)
+        deviceView.adapter = DeviceListAdapter(context)
 
         //Scroll to the selected device
         getPersistedString(null)?.let {

@@ -181,7 +181,7 @@ object Utils {
                 ?: ""
     }
 
-    fun getDevicePositionById(deviceId: String): Int {
+    fun getDevicePositionById(deviceId: String?): Int {
         for ((i, dev) in DeviceList.getDevices().withIndex()) {
             if (dev.deviceId == deviceId)
                 return i
