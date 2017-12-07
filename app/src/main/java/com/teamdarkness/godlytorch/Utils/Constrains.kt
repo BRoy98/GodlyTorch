@@ -32,5 +32,11 @@ object Constrains {
     val PREF_TILE_WHITE_ON = "tileWhiteIsOn"
     val PREF_TILE_YELLOW_ON = "tileYellowIsOn"
     val PREF_TILE_MASTER_ON = "tileMasterIsOn"
+    val PREF_TILE_WHITE_NAME = "tileWhiteName"
+    val PREF_TILE_YELLOW_NAME = "tileYellowName"
+    val PREF_TILE_MASTER_NAME = "tileMasterName"
+    val PREF_TILE_MASTER_STATE = "tileMasterState"
+    val PREF_TILE_WHITE_STATE = "tileWhiteState"
+    val PREF_TILE_YELLOW_STATE = "tileYellowState"
 
 }

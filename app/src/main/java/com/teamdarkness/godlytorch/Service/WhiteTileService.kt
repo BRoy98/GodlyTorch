@@ -32,7 +32,9 @@ import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_IS_DUAL_TONE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_MASTER_ON
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_WHITE_NAME
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_WHITE_ON
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_WHITE_STATE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_YELLOW_ON
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TOGGLE_FILE_LOCATION
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_WHITE_FILE_LOCATION
@@ -62,8 +64,8 @@ class WhiteTileService : TileService() {
         }
         // show no device selected warning
         if (isDualTone) {
-            qsTile.label = "White Torch"
-            qsTile.state = Tile.STATE_INACTIVE
+            qsTile.label = prefs.getString(PREF_TILE_WHITE_NAME, "White Torch")
+            qsTile.state = prefs.getInt(PREF_TILE_WHITE_STATE, Tile.STATE_INACTIVE)
         } else {
             qsTile.label = "White Torch Unsupported"
             qsTile.state = Tile.STATE_UNAVAILABLE
@@ -135,6 +137,8 @@ class WhiteTileService : TileService() {
                             runCommand(command)
                             editor.putInt(TILE_STATUS, 0)
                             editor.putBoolean(PREF_TILE_WHITE_ON, false)
+                            editor.putString(PREF_TILE_WHITE_NAME, "White Torch")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_INACTIVE)
                             editor.apply()
                             tile.label = "White Torch"
                             tile.state = Tile.STATE_INACTIVE
@@ -149,6 +153,8 @@ class WhiteTileService : TileService() {
                             runCommand(command)
                             editor.putInt(TILE_STATUS, 1)
                             editor.putBoolean(PREF_TILE_WHITE_ON, true)
+                            editor.putString(PREF_TILE_WHITE_NAME, "White Torch")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "White Torch"
                             tile.state = Tile.STATE_ACTIVE
@@ -177,6 +183,8 @@ class WhiteTileService : TileService() {
                             runCommand(command)
                             editor.putBoolean(PREF_TILE_WHITE_ON, true)
                             editor.putInt(TILE_STATUS, 1)
+                            editor.putString(PREF_TILE_WHITE_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -194,17 +202,12 @@ class WhiteTileService : TileService() {
                             runCommand(command)
                             editor.putBoolean(PREF_TILE_WHITE_ON, true)
                             editor.putInt(TILE_STATUS, 2)
+                            editor.putString(PREF_TILE_WHITE_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
                             tile.updateTile()
-
-                            // Log tile click to analytics
-                            val bundle = Bundle()
-                            bundle.putString("tile_type", "master")
-                            bundle.putString("device_type", "dual_tone")
-                            mFirebaseAnalytics = FirebaseAnalytics.getInstance(baseContext)
-                            mFirebaseAnalytics.logEvent("tile_click", bundle)
                         }
                         2 -> {
                             var torchVal: Int = (100 / (intensitySteps.toInt() + 1)) * 3
@@ -219,6 +222,8 @@ class WhiteTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_WHITE_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_WHITE_NAME, "White Torch")
+                                editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "White Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -235,6 +240,8 @@ class WhiteTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_WHITE_ON, true)
                             editor.putInt(TILE_STATUS, 3)
+                            editor.putString(PREF_TILE_WHITE_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -251,6 +258,8 @@ class WhiteTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_WHITE_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_WHITE_NAME, "White Torch")
+                                editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "White Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -267,6 +276,8 @@ class WhiteTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_WHITE_ON, true)
                             editor.putInt(TILE_STATUS, 4)
+                            editor.putString(PREF_TILE_WHITE_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -283,6 +294,8 @@ class WhiteTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_WHITE_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_WHITE_NAME, "White Torch")
+                                editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "White Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -299,6 +312,8 @@ class WhiteTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_WHITE_ON, true)
                             editor.putInt(TILE_STATUS, 5)
+                            editor.putString(PREF_TILE_WHITE_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -317,6 +332,8 @@ class WhiteTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_WHITE_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_WHITE_NAME, "White Torch")
+                                editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "White Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -333,6 +350,8 @@ class WhiteTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_WHITE_ON, true)
                             editor.putInt(TILE_STATUS, 6)
+                            editor.putString(PREF_TILE_WHITE_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -347,6 +366,8 @@ class WhiteTileService : TileService() {
                             runCommand(command)
                             editor.putBoolean(PREF_TILE_WHITE_ON, false)
                             editor.putInt(TILE_STATUS, 0)
+                            editor.putString(PREF_TILE_WHITE_NAME, "White Torch")
+                            editor.putInt(PREF_TILE_WHITE_STATE, Tile.STATE_INACTIVE)
                             editor.apply()
                             tile.label = "White Torch"
                             tile.state = Tile.STATE_INACTIVE

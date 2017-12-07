@@ -30,7 +30,9 @@ import android.os.Bundle
 import android.util.Log
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SINGLE_FILE_LOCATION
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_MASTER_NAME
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_MASTER_ON
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_MASTER_STATE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_WHITE_ON
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TILE_YELLOW_ON
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_TOGGLE_FILE_LOCATION
@@ -47,8 +49,9 @@ class MasterTileService : TileService() {
 
     override fun onStartListening() {
         super.onStartListening()
-        qsTile.label = "Torch"
-        qsTile.state = Tile.STATE_INACTIVE
+        val prefs = applicationContext.defaultSharedPreferences
+        qsTile.label = prefs.getString(PREF_TILE_MASTER_NAME, "Torch")
+        qsTile.state = prefs.getInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
         qsTile.updateTile()
     }
 
@@ -127,6 +130,8 @@ class MasterTileService : TileService() {
                             runCommand(command)
                             editor.putInt(TILE_STATUS, 0)
                             editor.putBoolean(PREF_TILE_MASTER_ON, false)
+                            editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
                             editor.apply()
                             tile.label = "Torch"
                             tile.state = Tile.STATE_INACTIVE
@@ -143,6 +148,8 @@ class MasterTileService : TileService() {
                             runCommand(command)
                             editor.putInt(TILE_STATUS, 1)
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
+                            editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "Torch"
                             tile.state = Tile.STATE_ACTIVE
@@ -156,6 +163,8 @@ class MasterTileService : TileService() {
                             runCommand(command)
                             editor.putInt(TILE_STATUS, 0)
                             editor.putBoolean(PREF_TILE_MASTER_ON, false)
+                            editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
                             editor.apply()
                             tile.label = "Torch"
                             tile.state = Tile.STATE_INACTIVE
@@ -169,6 +178,8 @@ class MasterTileService : TileService() {
                             runCommand(command)
                             editor.putInt(TILE_STATUS, 1)
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
+                            editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "Torch"
                             tile.state = Tile.STATE_ACTIVE
@@ -202,6 +213,8 @@ class MasterTileService : TileService() {
                             runCommand(command)
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
                             editor.putInt(TILE_STATUS, 1)
+                            editor.putString(PREF_TILE_MASTER_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -224,6 +237,8 @@ class MasterTileService : TileService() {
                             runCommand(command)
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
                             editor.putInt(TILE_STATUS, 2)
+                            editor.putString(PREF_TILE_MASTER_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -252,6 +267,8 @@ class MasterTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_MASTER_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                                editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -273,6 +290,8 @@ class MasterTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
                             editor.putInt(TILE_STATUS, 3)
+                            editor.putString(PREF_TILE_MASTER_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -292,6 +311,8 @@ class MasterTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_MASTER_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                                editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -313,6 +334,8 @@ class MasterTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
                             editor.putInt(TILE_STATUS, 4)
+                            editor.putString(PREF_TILE_MASTER_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -332,6 +355,8 @@ class MasterTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_MASTER_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                                editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -353,6 +378,8 @@ class MasterTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
                             editor.putInt(TILE_STATUS, 5)
+                            editor.putString(PREF_TILE_MASTER_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -375,6 +402,8 @@ class MasterTileService : TileService() {
                                 runCommand(command)
                                 editor.putBoolean(PREF_TILE_MASTER_ON, false)
                                 editor.putInt(TILE_STATUS, 0)
+                                editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                                editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
                                 editor.apply()
                                 tile.label = "Torch"
                                 tile.state = Tile.STATE_INACTIVE
@@ -396,6 +425,8 @@ class MasterTileService : TileService() {
                             }
                             editor.putBoolean(PREF_TILE_MASTER_ON, true)
                             editor.putInt(TILE_STATUS, 6)
+                            editor.putString(PREF_TILE_MASTER_NAME, "$torchVal%")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_ACTIVE)
                             editor.apply()
                             tile.label = "$torchVal%"
                             tile.state = Tile.STATE_ACTIVE
@@ -413,6 +444,8 @@ class MasterTileService : TileService() {
                             runCommand(command)
                             editor.putBoolean(PREF_TILE_MASTER_ON, false)
                             editor.putInt(TILE_STATUS, 0)
+                            editor.putString(PREF_TILE_MASTER_NAME, "Torch")
+                            editor.putInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
                             editor.apply()
                             tile.label = "Torch"
                             tile.state = Tile.STATE_INACTIVE
