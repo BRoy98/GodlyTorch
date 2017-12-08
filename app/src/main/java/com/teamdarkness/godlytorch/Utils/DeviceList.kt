@@ -113,6 +113,15 @@ object DeviceList {
                         .setWhiteLedFileLocation("led:torch_1/brightness")
                         .setToggleFileLocation("led:switch/brightness")
         )
+        deviceList.add(
+                Device().setName("Moto G5S Plus")
+                        .setDeviceId("sanders")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_1/brightness")
+                        .setWhiteLedFileLocation("led:torch_0/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
         // Lenovo
         deviceList.add(
                 Device().setName("Lenovo P2 (kuntao)")
