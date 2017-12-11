@@ -168,6 +168,15 @@ object DeviceList {
                         .setWhiteLedFileLocation("led:torch_1/brightness")
                         .setToggleFileLocation("led:switch/brightness")
         )
+        deviceList.add(
+                Device().setName("Lenovo Vibe P1 Turbo")
+                        .setDeviceId("passion")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("lenovo_torch1/brightness")
+                        .setWhiteLedFileLocation("lenovo_torch0/brightness")
+                        .setToggleFileLocation("dummy") // dummy because it is not required
+        )
         // LeEco
         deviceList.add(
                 Device().setName("LeEco Le 2")
