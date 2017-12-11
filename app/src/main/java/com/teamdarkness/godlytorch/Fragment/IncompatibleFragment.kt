@@ -71,14 +71,14 @@ class IncompatibleFragment : Fragment(), OnFragmentBackPressListener {
         val prefs = context?.defaultSharedPreferences
 
         contactButton.setOnClickListener {
-            val colors = arrayOf<CharSequence>("Email Us", "Join Telegram Community")
+            val colors = arrayOf<CharSequence>("Fill up Google form", "Join Telegram Community")
 
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.contact_us)
             builder.setItems(colors, { dialog, which ->
                 when(which) {
                     0 -> {
-                        sendMail("rohan.kumquat@gmail.com")
+                        openLink("https://goo.gl/forms/JnbCfWDh6Q0Yrwy83")
                     }
                     1 -> {
                         openLink("https://t.me/DNDofficial")
@@ -142,25 +142,6 @@ class IncompatibleFragment : Fragment(), OnFragmentBackPressListener {
         Toast.makeText(context, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
 
         Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
-    }
-
-    private fun sendMail(mailId: String = "") {
-        val emailIntent = Intent(Intent.ACTION_SENDTO, Uri.fromParts(
-                "mailto", mailId, null))
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Get help on Godly Torch")
-        emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Write your message here...\n\n-------------------------\n" +
-                "REQUIRED DEVICE DETAILS. DO NOT MODIFY!\n\n" +
-                "ro.build.version.sdk: ${getSystemProp("ro.build.version.sdk")} \n" +
-                "ro.build.version.release: ${getSystemProp("ro.build.version.release")} \n" +
-                "ro.product.device: ${getDeviceId()} \n" +
-                "ro.product.model: ${getDeviceName()} \n" +
-                "android.os.Build.PRODUCT: ${android.os.Build.PRODUCT} \n")
-        emailIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        try {
-            startActivity(Intent.createChooser(emailIntent, "Contact Us"))
-        } catch (e: ActivityNotFoundException) {
-            Snackbar.make(root, "Please install an email clients and try again", Snackbar.LENGTH_SHORT).show()
-        }
     }
 
     private fun openLink(link: String) {
