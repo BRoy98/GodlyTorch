@@ -33,6 +33,16 @@ object DeviceList {
                         .setWhiteLedFileLocation("led:torch_1/brightness")
                         .setToggleFileLocation("led:switch/brightness")
         )
+
+        deviceList.add(
+                Device().setName("Mi 6")
+                        .setDeviceId("sagit")
+                        .isDualTone(true)
+                        .setBrightnessMax(200)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch_0/brightness")
+        )
         deviceList.add(
                 Device().setName("Redmi Note 4")
                         .setDeviceId("mido")
