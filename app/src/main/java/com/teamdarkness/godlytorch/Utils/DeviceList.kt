@@ -214,6 +214,15 @@ object DeviceList {
                         .setSingleLedFileLocation("torch-light0/brightness")
         )
         deviceList.add(
+                Device().setName("Oneplus 2")
+                        .setDeviceId("OnePlus2")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("dummy")
+        )
+        deviceList.add(
                 Device().setName("Oneplus 3")
                         .setDeviceId("oneplus3")
                         .isDualTone(true)
