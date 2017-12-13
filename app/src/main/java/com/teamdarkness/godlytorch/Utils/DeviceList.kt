@@ -95,6 +95,13 @@ object DeviceList {
                         .setBrightnessMax(190)
                         .setSingleLedFileLocation("flashlight/brightness")
         )
+        deviceList.add(
+                Device().setName("Redmi 4A")
+                        .setDeviceId("rolex")
+                        .isDualTone(false)
+                        .setBrightnessMax(255)
+                        .setSingleLedFileLocation("flashlight/brightness")
+        )
         // Motorola
         deviceList.add(
                 Device().setName("Moto G5 Plus")
