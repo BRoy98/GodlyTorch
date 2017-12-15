@@ -71,7 +71,7 @@ object DeviceList {
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
-                Device().setName("Mi Max")
+                Device().setName("Mi Max (hydrogen)")
                         .setDeviceId("hydrogen")
                         .isDualTone(true)
                         .setBrightnessMax(200)
@@ -242,6 +242,15 @@ object DeviceList {
         deviceList.add(
                 Device().setName("Nexus 5X")
                         .setDeviceId("bullhead")
+                        .isDualTone(true)
+                        .setBrightnessMax(255)
+                        .setYellowLedFileLocation("led:torch_1/brightness")
+                        .setWhiteLedFileLocation("led:torch_0/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Nexus 6P")
+                        .setDeviceId("angler")
                         .isDualTone(true)
                         .setBrightnessMax(255)
                         .setYellowLedFileLocation("led:torch_1/brightness")
