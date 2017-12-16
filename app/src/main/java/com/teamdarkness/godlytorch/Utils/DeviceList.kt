@@ -248,6 +248,16 @@ object DeviceList {
                         .setWhiteLedFileLocation("led:torch_0/brightness")
                         .setToggleFileLocation("led:switch/brightness")
         )
+        // PIXEL
+        deviceList.add(
+                Device().setName("Pixel 2 XL")
+                        .setDeviceId("taimen")
+                        .isDualTone(true)
+                        .setBrightnessMax(200)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch_0/brightness")
+        )
         //Nexus
         deviceList.add(
                 Device().setName("Nexus 5X")
