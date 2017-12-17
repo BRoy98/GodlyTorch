@@ -89,6 +89,15 @@ object DeviceList {
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
+                Device().setName("Mi A1")
+                        .setDeviceId("tissot_sprout")
+                        .isDualTone(true)
+                        .setBrightnessMax(200)
+                        .setYellowLedFileLocation("led:torch_1/brightness")
+                        .setWhiteLedFileLocation("led:torch_0/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
                 Device().setName("Redmi Note 3")
                         .setDeviceId("kenzo")
                         .isDualTone(false)
