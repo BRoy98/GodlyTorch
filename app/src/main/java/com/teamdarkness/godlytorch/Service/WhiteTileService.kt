@@ -45,7 +45,6 @@ import org.jetbrains.anko.defaultSharedPreferences
 @TargetApi(Build.VERSION_CODES.N)
 class WhiteTileService : TileService() {
 
-    private lateinit var mFirebaseAnalytics: FirebaseAnalytics
     private val TILE_STATUS = "whiteTileStatus"
 
     override fun onStartListening() {
@@ -58,8 +57,8 @@ class WhiteTileService : TileService() {
 
         // show no device selected warning
         if (selectedDevice.isEmpty()) {
-            showDialog(TileDialog.getDialog(this, "Godly Torch",
-                    "No device selected. To use tiles, you must select a device from settings."))
+            qsTile.label = "White Torch Unsupported"
+            qsTile.state = Tile.STATE_UNAVAILABLE
             return
         }
         // show no device selected warning
@@ -81,6 +80,16 @@ class WhiteTileService : TileService() {
     private fun updateTile() {
 
         val prefs = applicationContext.defaultSharedPreferences
+
+        // get torch file locations
+        val selectedDevice = prefs.getString(PREF_SELECTED_DEVICE, "")
+
+        // show no device selected warning
+        if (selectedDevice.isEmpty()) {
+            showDialog(TileDialog.getDialog(this, "Godly Torch",
+                    "Your device is not supported yet. Open the app to request support."))
+            return
+        }
 
         val yellowTileIsOn = prefs.getBoolean(PREF_TILE_YELLOW_ON, false)
         val masterTileIsOn = prefs.getBoolean(PREF_TILE_MASTER_ON, false)

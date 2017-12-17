@@ -50,6 +50,16 @@ class MasterTileService : TileService() {
     override fun onStartListening() {
         super.onStartListening()
         val prefs = applicationContext.defaultSharedPreferences
+
+        // get torch file locations
+        val selectedDevice = prefs.getString(PREF_SELECTED_DEVICE, "")
+
+        // show no device selected warning
+        if (selectedDevice.isEmpty()) {
+            qsTile.label = "Godly Torch Unsupported"
+            qsTile.updateTile()
+            return
+        }
         qsTile.label = prefs.getString(PREF_TILE_MASTER_NAME, "Torch")
         qsTile.state = prefs.getInt(PREF_TILE_MASTER_STATE, Tile.STATE_INACTIVE)
         qsTile.updateTile()
@@ -70,7 +80,7 @@ class MasterTileService : TileService() {
         // show no device selected warning
         if (selectedDevice.isEmpty()) {
             showDialog(TileDialog.getDialog(this, "Godly Torch",
-                    "No device selected. To use tiles, you must select a device from settings."))
+                    "Your device is not supported yet. Open the app to request support."))
             return
         }
 
