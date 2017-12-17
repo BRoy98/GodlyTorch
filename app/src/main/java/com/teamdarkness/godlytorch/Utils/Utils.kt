@@ -18,14 +18,11 @@
 package com.teamdarkness.godlytorch.Utils
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Build
 import android.support.annotation.NonNull
 import android.text.Html
 import android.text.Spanned
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
-import com.teamdarkness.godlytorch.Utils.Constrains.PREF_DEVICE
-import com.teamdarkness.godlytorch.Utils.Constrains.PREF_DEVICE_ID
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_IS_DUAL_TONE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SINGLE_FILE_LOCATION
@@ -48,8 +45,14 @@ object Utils {
         }
     }
 
-    fun checkSupport(context: Context?): Boolean {
+    private fun readMaxBrightness(ledFile: String = ""): String {
+        val maxBrightnessList = Shell.SU.run("cat /sys/class/leds/${ledFile.replace("brightness", "max_brightness")}")
+        for (value in maxBrightnessList)
+            return value
+        return ""
+    }
 
+    fun checkSupport(context: Context?): Boolean {
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
         val deviceId = getDeviceId().toLowerCase()
         val deviceProduct = android.os.Build.PRODUCT.toLowerCase()
@@ -109,13 +112,14 @@ object Utils {
 
                 prefEditor.putString(PREF_SELECTED_DEVICE, device.deviceId)
                 prefEditor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
-                prefEditor.putInt(PREF_BRIGHTNESS_MAX, device.brightnessMax)
                 if (device.isDualTone) {
                     prefEditor.putString(PREF_WHITE_FILE_LOCATION, device.whiteLedFileLocation)
                     prefEditor.putString(PREF_YELLOW_FILE_LOCATION, device.yellowLedFileLocation)
                     prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, device.toggleFileLocation)
+                    prefEditor.putInt(PREF_BRIGHTNESS_MAX, readMaxBrightness(device.whiteLedFileLocation).toInt())
                 } else {
                     prefEditor.putString(PREF_SINGLE_FILE_LOCATION, device.singleLedFileLocation)
+                    prefEditor.putInt(PREF_BRIGHTNESS_MAX, readMaxBrightness(device.singleLedFileLocation).toInt())
                     prefEditor.putString(PREF_WHITE_FILE_LOCATION, "")
                     prefEditor.putString(PREF_YELLOW_FILE_LOCATION, "")
                     prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, "")
