@@ -182,6 +182,12 @@ object DeviceList {
                         .setWhiteLedFileLocation("lenovo_torch0/brightness")
                         .setToggleFileLocation("dummy") // dummy because it is not required
         )
+        deviceList.add(
+                Device().setName("Lenovo A6000")
+                        .setDeviceId("a6000")
+                        .isDualTone(false)
+                        .setSingleLedFileLocation("flashlight/brightness")
+        )
         // LeEco
         deviceList.add(
                 Device().setName("LeEco Le 2")
