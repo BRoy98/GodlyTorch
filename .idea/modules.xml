@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/GoldyTorch.iml" filepath="$PROJECT_DIR$/GoldyTorch.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/croller/croller.iml" filepath="$PROJECT_DIR$/croller/croller.iml" />
     </modules>
   </component>
 </project>
