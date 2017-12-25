@@ -17,15 +17,22 @@
 
 package com.teamdarkness.godlytorch.Settings
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
 import com.teamdarkness.godlytorch.R
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper
 
 class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CalligraphyConfig.initDefault(CalligraphyConfig.Builder()
+                .setDefaultFontPath("fonts/sans_regular.ttf")
+                .setFontAttrId(R.attr.fontPath)
+                .build())
         setContentView(R.layout.activity_settings)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
 
@@ -36,5 +43,9 @@ class SettingsActivity : AppCompatActivity() {
 
         fragmentManager.beginTransaction().replace(R.id.fragment_container,
                 PreferenceFragment()).commit()
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase))
     }
 }
