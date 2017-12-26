@@ -227,6 +227,14 @@ object DeviceList {
                         .setWhiteLedFileLocation("led:torch_1/brightness")
                         .setToggleFileLocation("led:switch/brightness")
         )
+        deviceList.add(
+                Device().setName("OnePlus 5")
+                        .setDeviceId("OnePlus5")
+                        .isDualTone(true)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch_0/brightness")
+        )
         // HTC
         deviceList.add(
                 Device().setName("HTC 10")
