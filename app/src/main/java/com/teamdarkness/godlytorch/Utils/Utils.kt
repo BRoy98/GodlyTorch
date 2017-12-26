@@ -22,6 +22,7 @@ import android.os.Build
 import android.support.annotation.NonNull
 import android.text.Html
 import android.text.Spanned
+import android.util.Log
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_BRIGHTNESS_MAX
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_IS_DUAL_TONE
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_SELECTED_DEVICE
@@ -33,7 +34,14 @@ import eu.chainfire.libsuperuser.Shell
 import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.doAsync
 import java.io.BufferedReader
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
+import java.io.OutputStream
+import com.teamdarkness.godlytorch.Utils.Constrains.PREF_USE_INTERNAL_BUSYBOX
+
 
 object Utils {
 
@@ -45,13 +53,31 @@ object Utils {
         }
     }
 
-    private fun readMaxBrightness(ledFile: String = ""): String {
-        val maxBrightnessList = Shell.SU.run("cat /sys/class/leds/${ledFile.replace("brightness", "max_brightness")}")
-        for (value in maxBrightnessList)
-            return value
+    private fun readMaxBrightness(ledFile: String = "", context: Context?): String {
+        val defPref = context?.defaultSharedPreferences
+        var maxBr = ""
+        var maxBrightnessList = Shell.SU.run("cat /sys/class/leds/${ledFile.replace("brightness", "max_brightness")}")
+        for (value in maxBrightnessList) {
+            maxBr = value
+            return maxBr
+        }
+        // Use internal busybox because busybox is not found
+        if (maxBr.isEmpty()) {
+            copyBusyBox(context)
+            val prefEditor = defPref?.edit()
+            prefEditor?.putBoolean(PREF_USE_INTERNAL_BUSYBOX, true)
+            prefEditor?.apply()
+            maxBrightnessList = Shell.SU.run("${context?.filesDir?.absolutePath}/busybox cat /sys/class/leds/${ledFile.replace("brightness", "max_brightness")}")
+
+            for (value in maxBrightnessList) {
+                maxBr = value
+                return maxBr
+            }
+        }
         return ""
     }
 
+    // Check if device is supported
     fun checkSupport(context: Context?): Boolean {
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
         val deviceId = getDeviceId().toLowerCase()
@@ -103,31 +129,36 @@ object Utils {
         return null
     }
 
-    fun selectDevice(context: Context?, device: Device?) {
+    fun selectDevice(context: Context?, device: Device?): Boolean {
         device?.let {
             val defPref = context?.defaultSharedPreferences
 
             defPref?.let {
-                val prefEditor = defPref.edit()
 
-                prefEditor.putString(PREF_SELECTED_DEVICE, device.deviceId)
-                prefEditor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
-                if (device.isDualTone) {
-                    prefEditor.putString(PREF_WHITE_FILE_LOCATION, device.whiteLedFileLocation)
-                    prefEditor.putString(PREF_YELLOW_FILE_LOCATION, device.yellowLedFileLocation)
-                    prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, device.toggleFileLocation)
-                    prefEditor.putInt(PREF_BRIGHTNESS_MAX, readMaxBrightness(device.whiteLedFileLocation).toInt())
-                } else {
-                    prefEditor.putString(PREF_SINGLE_FILE_LOCATION, device.singleLedFileLocation)
-                    prefEditor.putInt(PREF_BRIGHTNESS_MAX, readMaxBrightness(device.singleLedFileLocation).toInt())
-                    prefEditor.putString(PREF_WHITE_FILE_LOCATION, "")
-                    prefEditor.putString(PREF_YELLOW_FILE_LOCATION, "")
-                    prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, "")
+                try {
+                    val prefEditor = defPref.edit()
+                    prefEditor.putString(PREF_SELECTED_DEVICE, device.deviceId)
+                    prefEditor.putBoolean(PREF_IS_DUAL_TONE, device.isDualTone)
+                    if (device.isDualTone) {
+                        prefEditor.putString(PREF_WHITE_FILE_LOCATION, device.whiteLedFileLocation)
+                        prefEditor.putString(PREF_YELLOW_FILE_LOCATION, device.yellowLedFileLocation)
+                        prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, device.toggleFileLocation)
+                        prefEditor.putInt(PREF_BRIGHTNESS_MAX, readMaxBrightness(device.whiteLedFileLocation, context).toInt())
+                    } else {
+                        prefEditor.putString(PREF_SINGLE_FILE_LOCATION, device.singleLedFileLocation)
+                        prefEditor.putInt(PREF_BRIGHTNESS_MAX, readMaxBrightness(device.singleLedFileLocation, context).toInt())
+                        prefEditor.putString(PREF_WHITE_FILE_LOCATION, "")
+                        prefEditor.putString(PREF_YELLOW_FILE_LOCATION, "")
+                        prefEditor.putString(PREF_TOGGLE_FILE_LOCATION, "")
+                    }
+                    prefEditor.apply()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return false
                 }
-
-                prefEditor.apply()
             }
         }
+        return true
     }
 
     fun getDeviceId(): String = getSystemProp("ro.product.device")
@@ -195,5 +226,46 @@ object Utils {
 
     fun getDeviceById(deviceId: String): Device? {
         return DeviceList.getDevices().firstOrNull { it.deviceId == deviceId }
+    }
+
+
+    fun copyBusyBox(context: Context?) {
+        context?.let {
+            val assetManager = context.assets
+            val inStream: InputStream?
+            val out: OutputStream?
+            try {
+                inStream = assetManager.open("binary/busybox") //binary/busybox
+
+                val outDir = context.filesDir?.absolutePath
+
+                val outFile = File(outDir, "busybox")
+
+                out = FileOutputStream(outFile)
+                copyFile(inStream, out, context)
+            } catch (e: Exception) {
+                Log.e("Utils", "Failed to copy asset file", e)
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun copyFile(inStream: InputStream, out: OutputStream, context: Context?) {
+        try {
+            val buffer = ByteArray(1024)
+            var read = inStream.read(buffer)
+            while (read != -1) {
+                out.write(buffer, 0, read)
+                read = inStream.read(buffer)
+            }
+            val file = File(context?.filesDir?.absolutePath + "/busybox")
+            file.setExecutable(true)
+            out.flush()
+            out.close()
+            inStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
     }
 }

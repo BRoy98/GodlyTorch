@@ -38,5 +38,6 @@ object Constrains {
     val PREF_TILE_MASTER_STATE = "tileMasterState"
     val PREF_TILE_WHITE_STATE = "tileWhiteState"
     val PREF_TILE_YELLOW_STATE = "tileYellowState"
+    val PREF_USE_INTERNAL_BUSYBOX = "useInternalBusybox"
 
 }
