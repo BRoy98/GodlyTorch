@@ -73,7 +73,7 @@ object DeviceList {
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
-                Device().setName("Mi 3S")
+                Device().setName("Redmi 3S")
                         .setDeviceId("land")
                         .isDualTone(true)
                         .setYellowLedFileLocation("led:torch_0/brightness")
@@ -87,6 +87,14 @@ object DeviceList {
                         .setYellowLedFileLocation("led:torch_1/brightness")
                         .setWhiteLedFileLocation("led:torch_0/brightness")
                         .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Mi Note 3")
+                        .setDeviceId("jason")
+                        .isDualTone(true)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch_0/brightness")
         )
         deviceList.add(
                 Device().setName("Redmi Note 3")
