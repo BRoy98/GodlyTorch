@@ -68,7 +68,7 @@ class SingleKnobFragment : Fragment(), OnFragmentBackPressListener {
             // get torch file location
             singleLedFileLocation = prefs.getString(Constrains.PREF_SINGLE_FILE_LOCATION, null)
 
-            doubleTapEnabled = prefs.getBoolean(Constrains.PREF_DOUBLE_TONE_ENABLED, false)
+            doubleTapEnabled = prefs.getBoolean(Constrains.PREF_DOUBLE_TONE_ENABLED, true)
 
             // get max brightness
             brightnessMax = prefs.getInt("brightnessMax", 0)
