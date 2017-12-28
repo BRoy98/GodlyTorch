@@ -83,7 +83,7 @@ class ThreeKnobFragment : Fragment(), OnFragmentBackPressListener {
             yellowLedFileLocation = prefs.getString(PREF_YELLOW_FILE_LOCATION, null)
             toggleFileLocation = prefs.getString(PREF_TOGGLE_FILE_LOCATION, null)
 
-            doubleTapEnabled = prefs.getBoolean(PREF_DOUBLE_TONE_ENABLED, false)
+            doubleTapEnabled = prefs.getBoolean(PREF_DOUBLE_TONE_ENABLED, true)
 
             // get max brightness
             brightnessMax = prefs.getInt("brightnessMax", 0)
