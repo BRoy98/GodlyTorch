@@ -214,13 +214,13 @@ object DeviceList {
         )
         // Oneplus
         deviceList.add(
-                Device().setName("Oneplus One")
+                Device().setName("OnePlus One")
                         .setDeviceId("bacon")
                         .isDualTone(false)
-                        .setSingleLedFileLocation("torch-light0/brightness")
+                        .setSingleLedFileLocation("torch-light/brightness")
         )
         deviceList.add(
-                Device().setName("Oneplus 2")
+                Device().setName("OnePlus 2")
                         .setDeviceId("OnePlus2")
                         .isDualTone(true)
                         .setYellowLedFileLocation("led:torch_0/brightness")
@@ -228,7 +228,7 @@ object DeviceList {
                         .setToggleFileLocation("dummy")
         )
         deviceList.add(
-                Device().setName("Oneplus 3")
+                Device().setName("OnePlus 3")
                         .setDeviceId("oneplus3")
                         .isDualTone(true)
                         .setYellowLedFileLocation("led:torch_0/brightness")
