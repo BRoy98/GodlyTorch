@@ -25,7 +25,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Settings.SettingsActivity" />
+        <activity android:name=".Settings.SettingsActivity" >
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>
+            </intent-filter>
+        </activity>
         <activity android:name=".Activity.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
