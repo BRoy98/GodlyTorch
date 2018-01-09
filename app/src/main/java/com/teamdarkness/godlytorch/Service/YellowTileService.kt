@@ -90,7 +90,8 @@ class YellowTileService : TileService() {
         // show no device selected warning
         if (selectedDevice.isEmpty()) {
             showDialog(TileDialog.getDialog(this, "Godly Torch",
-                    "Your device is not supported yet. Open the app to request support."))
+                    "Your device is not set or supported yet." +
+                            " Open the app to request support."))
             return
         }
 
@@ -116,7 +117,7 @@ class YellowTileService : TileService() {
         if (!askRoot()) {
             if (!isLocked) {
                 showDialog(TileDialog.getDialog(this, "Godly Torch",
-                        "Root access is required to run Godly Torch. " +
+                        "Root access is required to run this app. " +
                                 "Make sure your device is rooted and root access is enabled."))
             }
             tile.state = Tile.STATE_INACTIVE
