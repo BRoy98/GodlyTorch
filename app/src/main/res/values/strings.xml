@@ -22,9 +22,9 @@
     <string name="cmd_echo">echo %1$s > /sys/class/leds/%2$s;</string>
 
     <string name="root_check">Looking for root…</string>
-    <string name="root_success">I am ROOT!</string>
+    <string name="root_success">I AM ROOT!</string>
     <string name="root_denied">I ain\'t root, gimme ROOT !</string>
-    <string name="not_rooted">Please uninstall me, I don\'t belong here…</string>
+    <string name="not_rooted">Root not found.</string>
     <string name="check_device">Checking device compatibility…</string>
     <string name="device_incompatible">Device Incompatible</string>
     <string name="incompatible_message"><![CDATA[<b>%1$s is not officially supported yet.</b> <br><br>Feel free to contact us for your device support. We are more than happy to help you! You must provide us proper details about your device to get official support. <br><br>You can manually change the device below.<br><br><b>Note: Manual device changing may harm your device.</b>]]></string>
