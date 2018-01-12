@@ -39,7 +39,7 @@
         app:indicator_width="10"
         app:is_continuous="false"
         app:label="Master Control"
-        app:label_size="60"
+        app:label_size="14sp"
         app:label_color="#ffffff"
         app:label_font="fonts/sans_regular.ttf"
         app:label_style="normal"
