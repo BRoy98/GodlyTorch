@@ -281,6 +281,13 @@ object DeviceList {
                         .isDualTone(false)
                         .setSingleLedFileLocation("flashlight/brightness")
         )
+        // Sony
+        deviceList.add(
+                Device().setName("Xperia M2 Dual")
+                        .setDeviceId("d2302")
+                        .isDualTone(false)
+                        .setSingleLedFileLocation("torch-light/brightness")
+        )
         // ZUK
         deviceList.add(
                 Device().setName("ZUK Z1")
