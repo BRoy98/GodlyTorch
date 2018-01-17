@@ -41,6 +41,14 @@ object DeviceList {
                         .setWhiteLedFileLocation("led:torch_1/brightness")
                         .setToggleFileLocation("led:switch/brightness")
         )
+        deviceList.add(
+                Device().setName("LeEco LePro 3")
+                        .setDeviceId("le_zl1")
+                        .isDualTone(true)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
         // Lenovo
         deviceList.add(
                 Device().setName("Lenovo P2 (kuntao)")
