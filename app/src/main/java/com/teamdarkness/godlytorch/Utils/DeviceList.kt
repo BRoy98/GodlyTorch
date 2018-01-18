@@ -271,9 +271,9 @@ object DeviceList {
         deviceList.add(
                 Device().setName("Redmi 3S")
                         .setDeviceId("land")
-                        .isDualTone(true)
-                        .setYellowLedFileLocation("led:torch_0/brightness")
-                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .isDualTone(false)
+                        //.setYellowLedFileLocation("led:torch_0/brightness")
+                        //.setWhiteLedFileLocation("led:torch_1/brightness")
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
@@ -296,6 +296,14 @@ object DeviceList {
                         .isDualTone(false)
                         .setSingleLedFileLocation("torch-light/brightness")
         )
+        // YU
+        deviceList.add(
+                Device().setName("YU Yureka")
+                        .setDeviceId("yureka")
+                        .isDualTone(false)
+                        .setSingleLedFileLocation("torch-light0/brightness")
+        )
+
         // ZUK
         deviceList.add(
                 Device().setName("ZUK Z1")
