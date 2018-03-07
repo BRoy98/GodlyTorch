@@ -131,7 +131,7 @@ object DeviceList {
         )
         deviceList.add(
                 Device().setName("Mi 5s")
-                        .setDeviceId("capricon")
+                        .setDeviceId("capricorn")
                         .isDualTone(true)
                         .setYellowLedFileLocation("led:torch_0/brightness")
                         .setWhiteLedFileLocation("led:torch_1/brightness")
