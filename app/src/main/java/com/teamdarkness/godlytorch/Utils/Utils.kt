@@ -41,6 +41,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.OutputStream
 import com.teamdarkness.godlytorch.Utils.Constrains.PREF_USE_INTERNAL_BUSYBOX
+import github.nisrulz.easydeviceinfo.base.EasyDeviceMod
 
 
 object Utils {
@@ -80,8 +81,27 @@ object Utils {
     // Check if device is supported
     fun checkSupport(context: Context?): Boolean {
         val deviceList: ArrayList<Device> = DeviceList.getDevices()
-        val deviceId = getDeviceId().toLowerCase()
-        val deviceProduct = android.os.Build.PRODUCT.toLowerCase()
+
+        val easyDeviceMod = EasyDeviceMod(context)
+        val deviceId = easyDeviceMod.device.toLowerCase()
+
+        for ((i, device) in deviceList.withIndex()) {
+            when {
+                device.deviceId.toLowerCase().contains(deviceId) -> {
+                    selectDevice(context, device)
+                    return true
+                }
+                i == deviceList.size - 1 -> {
+                    return false
+                }
+                else -> {
+                }
+            }
+        }
+
+
+        //val deviceId = getDeviceId().toLowerCase()
+        /*val deviceProduct = android.os.Build.PRODUCT.toLowerCase()
         var deviceProductSplit = ""
 
         if (deviceProduct.contains("_")) {
@@ -109,7 +129,7 @@ object Utils {
                 else -> {
                 }
             }
-        }
+        }*/
         return false
     }
 

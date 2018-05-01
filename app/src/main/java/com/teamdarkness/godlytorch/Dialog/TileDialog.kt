@@ -27,7 +27,7 @@ object TileDialog {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(title)
         builder.setMessage(message)
-        builder.setPositiveButton("OK.") { dialogInterface, i -> dialogInterface.dismiss() }
+        builder.setPositiveButton("OK.") { dialogInterface, _ -> dialogInterface.dismiss() }
 
         return builder.create()
     }
