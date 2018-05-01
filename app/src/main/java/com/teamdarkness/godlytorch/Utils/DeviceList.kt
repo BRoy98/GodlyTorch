@@ -17,6 +17,8 @@
 
 package com.teamdarkness.godlytorch.Utils
 
+import java.util.ArrayList
+
 object DeviceList {
 
     private var deviceList: ArrayList<Device> = java.util.ArrayList()
@@ -161,14 +163,6 @@ object DeviceList {
                         .setWhiteLedFileLocation("led:torch_1/brightness")
                         .setToggleFileLocation("led:switch_0/brightness")
         )
-        deviceList.add(
-                Device().setName("Redmi Note 4")
-                        .setDeviceId("mido")
-                        .isDualTone(true)
-                        .setYellowLedFileLocation("led:torch_1/brightness")
-                        .setWhiteLedFileLocation("led:torch_0/brightness")
-                        .setToggleFileLocation("led:switch/brightness")
-        )
         // Motorola
         deviceList.add(
                 Device().setName("Moto G5 Plus")
@@ -288,6 +282,22 @@ object DeviceList {
                         .setDeviceId("kenzo")
                         .isDualTone(false)
                         .setSingleLedFileLocation("flashlight/brightness")
+        )
+        deviceList.add(
+                Device().setName("Redmi Note 4")
+                        .setDeviceId("mido")
+                        .isDualTone(true)
+                        .setYellowLedFileLocation("led:torch_1/brightness")
+                        .setWhiteLedFileLocation("led:torch_0/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Redmi Note 5 Pro")
+                        .setDeviceId("whyred")
+                        .isDualTone(true)
+                        .setYellowLedFileLocation("led:torch_1/brightness")
+                        .setWhiteLedFileLocation("led:torch_0/brightness")
+                        .setToggleFileLocation("led:switch_0/brightness")
         )
         // Sony
         deviceList.add(
