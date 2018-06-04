@@ -75,6 +75,7 @@ dependencies {
     implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
     implementation 'com.mikepenz:fontawesome-typeface:4.7.0.2@aar'
     implementation 'com.github.nisrulz:easydeviceinfo-base:2.4.1'
+    //implementation 'com.github.Stericson:RootTools:5.0'
     implementation 'com.google.firebase:firebase-core:11.8.0'
     implementation "org.jetbrains.anko:anko-commons:$anko_version"
     implementation 'eu.chainfire:libsuperuser:1.0.0.+'
