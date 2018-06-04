@@ -322,6 +322,14 @@ object DeviceList {
                         .setSingleLedFileLocation("led:torch_0/brightness")
         )
 
+        // Asus
+        deviceList.add(
+                Device().setName("Asus Zenfone Max")
+                        .setDeviceId("ASUS_Z010D")
+                        .isDualTone(false)
+                        .setSingleLedFileLocation("torch-light0/brightness")
+        )
+
         return deviceList
     }
 }
