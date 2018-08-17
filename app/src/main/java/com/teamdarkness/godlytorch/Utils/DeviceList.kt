@@ -181,8 +181,16 @@ object DeviceList {
                         .setToggleFileLocation("led:switch/brightness")
         )
         deviceList.add(
-                Device().setName("Moto G4 Plus")
+                Device().setName("Moto G4")
                         .setDeviceId("athene")
+                        .isDualTone(true)
+                        .setYellowLedFileLocation("led:torch_0/brightness")
+                        .setWhiteLedFileLocation("led:torch_1/brightness")
+                        .setToggleFileLocation("led:switch/brightness")
+        )
+        deviceList.add(
+                Device().setName("Moto G4 Plus")
+                        .setDeviceId("athene_f")
                         .isDualTone(true)
                         .setYellowLedFileLocation("led:torch_0/brightness")
                         .setWhiteLedFileLocation("led:torch_1/brightness")
