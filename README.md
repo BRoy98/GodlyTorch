@@ -1,6 +1,6 @@
 # Godly Torch  
 [![Telegram](https://img.shields.io/badge/Telegram-join%20chat-blue.svg)](https://telegram.me/dndofficial)
-[![Build Status](https://www.bitrise.io/app/763ee94ca31e7d95/status.svg?token=jBe0br2dBnJd6cJkNKJYqg&branch=master)](https://github.com/BRoy98/GodlyTorch)
+[![Build Status](https://app.bitrise.io/app/763ee94ca31e7d95.svg?token=jBe0br2dBnJd6cJkNKJYqg)](https://github.com/BRoy98/GodlyTorch)
 [![GNU GPL License](https://img.shields.io/badge/License-GNU%20GPL%20v3-orange.svg)](https://github.com/BRoy98/GodlyTorch/blob/master/LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-android-brightgreen.svg)]()
 

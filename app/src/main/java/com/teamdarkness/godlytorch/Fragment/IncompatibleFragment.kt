@@ -75,8 +75,8 @@ class IncompatibleFragment : Fragment(), OnFragmentBackPressListener {
 
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.contact_us)
-            builder.setItems(colors, { dialog, which ->
-                when(which) {
+            builder.setItems(colors) { dialog, which ->
+                when (which) {
                     0 -> {
                         openLink("https://goo.gl/forms/JnbCfWDh6Q0Yrwy83")
                     }
@@ -85,25 +85,25 @@ class IncompatibleFragment : Fragment(), OnFragmentBackPressListener {
                     }
                 }
                 dialog.dismiss()
-            })
+            }
             builder.show()
         }
 
         btnSelectDevice.setOnClickListener {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Choose device")
-            val deviceView = RecyclerView(context)
+            val deviceView = RecyclerView(it.context)
             deviceView.layoutManager = LinearLayoutManager(context)
             deviceView.adapter = DeviceListAdapter(context)
             builder.setView(deviceView)
-            builder.setNegativeButton("Cancel", { dialogInterface, _ ->
+            builder.setNegativeButton("Cancel") { dialogInterface, _ ->
                 dialogInterface.dismiss()
-            })
-            builder.setPositiveButton("Select", { dialogInterface, _ ->
+            }
+            builder.setPositiveButton("Select") { dialogInterface, _ ->
                 dialogInterface.dismiss()
                 val selectedDevice = prefs?.getString(PREF_SELECTED_DEVICE, "")
                 deviceName.text = getDeviceNameById(selectedDevice)
-            })
+            }
             builder.show()
         }
 

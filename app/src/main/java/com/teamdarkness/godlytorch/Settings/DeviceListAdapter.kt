@@ -40,11 +40,11 @@ class DeviceListAdapter(val context: Context?) : RecyclerView.Adapter<DeviceHold
         return DeviceList.getDevices().size
     }
 
-    override fun onBindViewHolder(holder: DeviceHolder?, position: Int) {
+    override fun onBindViewHolder(holder: DeviceHolder, position: Int) {
         holder?.bind(DeviceList.getDevices()[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): DeviceHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeviceHolder {
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.select_device_layout, parent, false)
         return DeviceHolder(view)
     }
